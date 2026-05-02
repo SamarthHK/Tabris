@@ -1,5 +1,7 @@
 package com.viveka01.format;
-
+/**
+ *Holding all the content types
+ */
 public enum ContentType{
     //text
     PLAIN("text","plain"),
@@ -30,15 +32,21 @@ public enum ContentType{
         this.mediaType = mediaType;
         this.mediaFormat = mediaFormat;
     }
-
+    /**
+     *@return string containing mediaType/MediaFormat 
+     */
     public String getContentType(){
         return mediaType + "/" + mediaFormat;
     }
-
+    /**
+     * @return returns type of media
+     */
     public String getMediaType(){
         return mediaType;
     }
-
+    /**
+     * @return returns format of media
+     */
     public String getMediaFormat(){
         return mediaFormat;
     }

@@ -6,12 +6,16 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 
 public class HttpFormat {
-
+    /**
+     * Holds method, path, and version params for incoming request
+     */
     public class Request {
         Method method;
         String path;
         String version;
-
+        /**
+         * @param Takes whole http packet
+         */
         public Request(byte[] packet) {
             String request = new String(packet, StandardCharsets.UTF_8);
             String[] part = request.split("\r\n");
@@ -51,7 +55,9 @@ public class HttpFormat {
         final String SERVER = "Munna-01";
         //Body
         byte[] body;
-
+        /**
+         * @param takes status code, content type and payload
+         */
         public Response(int statusCode, ContentType contentType, byte[] body){
             this.statusCode = statusCode;
             this.contentType = contentType;
@@ -70,7 +76,9 @@ public class HttpFormat {
                     reasonPhrase = "Internal Server Error"; 
             }
         }
-
+        /**
+         * @return gives whole byte array response
+         */
         public byte[] getResponse(){
             this.date = ZonedDateTime.now(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME);
 
