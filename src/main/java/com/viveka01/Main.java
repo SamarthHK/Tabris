@@ -3,6 +3,10 @@ package com.viveka01;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import com.viveka01.format.*;
+import com.viveka01.format.HttpFormat.Request;
+
+import java.util.*;
 
 public class Main {
     public static void main(String args[]) throws IOException {
@@ -23,17 +27,47 @@ public class Main {
         while (true) {
             //opening connection to accept all responses
             final Socket client = server.accept();
-            //Reading output of socket
-            InputStreamReader isr =  new InputStreamReader(client.getInputStream());
-            BufferedReader reader = new BufferedReader(isr);
-            //Reading the line, and checking if its empty or no
-            String line = reader.readLine();            
-            //loops until there is empty line left
-            while (!line.isEmpty()) {
-                System.out.println(line);
-                line = reader.readLine();
-                continue;
+            HttpFormat.Request request;
+            try{
+                request = readRequest(client);
+                System.out.printf("Code: %s\nRoute: %s\nVersion: %d\n",request.getMethod(),request.getPath(),request.getVersion());
+            }catch (IOException e){
+                e.printStackTrace();
+            } 
+        }
+    }
+    public static HttpFormat.Request readRequest(Socket request) throws IOException{
+        final int BUFFERSIZE = 1024;
+        byte[] temp = new byte[BUFFERSIZE];
+        InputStream in = request.getInputStream();
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int bytesRead = 0;
+        int headerEndPos = 0;
+
+        while(true){
+            bytesRead = in.read(temp,0, BUFFERSIZE);
+            buffer.write(temp, 0, BUFFERSIZE);
+            headerEndPos = checkLineBreak(buffer);
+            if (headerEndPos != -1){
+                break;
             }
         }
+        temp = buffer.toByteArray();
+        byte[] header = Arrays.copyOfRange(temp, 0, headerEndPos);
+        HttpFormat.Request formatedRequest = new HttpFormat.Request(header);
+        return formatedRequest;
+
+    }
+    public static int checkLineBreak(ByteArrayOutputStream in){
+        byte[] inByteArray = in.toByteArray();
+        byte[] lineBreak = { 0x0D,0x0A,0x0D,0x0A};
+        byte[] temp = new byte[4];
+        for(int i = 0; i != inByteArray.length-3;i++){
+            temp = Arrays.copyOfRange(inByteArray,i,i+4);
+            if (temp.equals(lineBreak)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

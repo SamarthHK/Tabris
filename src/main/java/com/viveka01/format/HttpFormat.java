@@ -9,7 +9,7 @@ public class HttpFormat {
     /**
      * Holds method, path, and version params for incoming request
      */
-    public class Request {
+    public static class Request {
         Method method;
         String path;
         String version;
@@ -42,7 +42,7 @@ public class HttpFormat {
         }
     }
 
-    public class Response{
+    public static class Response{
         //Status Line
         final String VERSION = "1.1";
         int statusCode;
