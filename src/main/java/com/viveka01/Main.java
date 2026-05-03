@@ -36,7 +36,7 @@ public class Main {
                 request = readRequest(client);
                 String message = "Hello there!!!";
                 byte[] body = message.getBytes(StandardCharsets.UTF_8);
-                HttpFormat.Response response = new Response(200, ContentType.HTML, body);
+                HttpFormat.Response response = new Response(200, ContentType.PLAIN, body);
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
                 sendResponse.flush();
@@ -55,6 +55,7 @@ public class Main {
         byte[] temp = new byte[BUFFERSIZE];
         InputStream in = request.getInputStream();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int bytesRead = 0;
         int headerEndPos = 0;
 
         while(true){
