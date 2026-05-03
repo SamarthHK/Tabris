@@ -34,13 +34,18 @@ public class Main {
             HttpFormat.Request request;
             try{
                 request = readRequest(client);
-                String message = "Hello there!!!";
-                byte[] body = message.getBytes(StandardCharsets.UTF_8);
-                HttpFormat.Response response = new Response(200, ContentType.PLAIN, body);
+                
+                File html = new File("src/main/frontEnd/Remixxer-Art-Demo-Front-End/mainRemixxerPage");
+                FileInputStream readHtml = new FileInputStream(html);
+                byte[] body = new byte[readHtml.available()];
+                readHtml.read(body);
+
+                HttpFormat.Response response = new Response(200, ContentType.HTML, body);
+                
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
-                sendResponse.flush();
-                sendResponse.close();
+                sendResponse.close();  
+
             }catch (IOException e){
                 e.printStackTrace();
             } 
