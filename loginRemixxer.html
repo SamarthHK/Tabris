@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Login </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="externalRemixxer.css">
+    </head>
+
+<body class="loginPage">
+    <header>
+        <div id="logInHeader">
+        <h1>
+            Log In
+        </h1>
+        </div>
+    </header>
+ <div class="suorli">
+</div>
+<div class="infoContainerStyle">
+<form action="Registered.html" form class="infoContainer" method="get" onsubmit="return validateForm()" oninput="output.value = 'Welcome, ' + firstName.value + ' ' + lastName.value + '!';">
+<fieldset>
+    <legend>Don't have an account?</legend>
+<required>
+<div id="emailBox">
+<label for="emailAddress">Email Address</label> <!--Email Field-->
+<input type="email" name="emailAddress" id="emailAddress"> <br />
+</div>
+</required>
+<required>
+<div>
+<label for="firstName">First name</label> 
+<input type="text" name="firstName" id="firstName"> <br /><!--First Name Field-->
+</div>
+</required>
+<div>
+<required>
+<label for="lastName">Last Name</label> 
+<input type="text" name="lastName" id="lastName"><br /> <!--Last Name Field-->
+</required>
+</div>
+<required>
+<label for ="password">Password</label>
+<input type="password" name="password" id="password"><br /> <!--Password Field-->
+</required>
+<label for="submit"> </label>
+<input type="submit" value="Submit" id="submit">
+</fieldset>
+</div>
+</form>
+<script>
+    const infoContainer = documnet.querySelector('.infoContainer');
+    infoContainer.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = new FormData(infoContainer);
+        const retrievedData = Object.fromEntries(formData);
+        console.log(retrievedData);
+    })
+</script>
+</body>
