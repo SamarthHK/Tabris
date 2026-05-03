@@ -35,15 +35,11 @@ public class Main {
             try{
                 request = readRequest(client);
                 
-                File html = new File("src/main/frontEnd/Remixxer-Art-Demo-Front-End/mainRemixxerPage");
-                FileInputStream readHtml = new FileInputStream(html);
-                byte[] body = new byte[readHtml.available()];
-                readHtml.read(body);
-
-                HttpFormat.Response response = new Response(200, ContentType.HTML, body);
+                HttpFormat.Response response = Router.getResponse(request.getPath(),request.getMethod());
                 
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
+                sendResponse.flush();
                 sendResponse.close();  
 
             }catch (IOException e){
