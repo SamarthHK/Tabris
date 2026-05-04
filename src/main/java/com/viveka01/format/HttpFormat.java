@@ -2,9 +2,12 @@ package com.viveka01.format;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Arrays;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
 import javax.swing.text.AbstractDocument.Content;
-
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 
@@ -13,6 +16,9 @@ public class HttpFormat {
      * Holds method, path, and version params for incoming request
      */
     public static class Request {
+        byte[] packet;
+        byte[] header;
+        byte[] body;
         //Request line
         Method method;
         String path;
@@ -24,46 +30,54 @@ public class HttpFormat {
         //Header Checks
         Boolean headerFinished = false;
         int headerEnding;
-        //body
-        byte[] body;
-        /**
-         * @param Takes whole http packet
-         */
-        public Request(byte[] packet) {
-            if (headerFinished){
-                return;
+        //body checks
+        Boolean bodyFinished = false;
+        
+        public Request(InputStream request){
+            try {
+                getHeaderInfo(request);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            String request = new String(packet, StandardCharsets.UTF_8);
-            String[] part = request.split("\r\n");
-            assignValues(part);
-            if(request.contains("\r\n\r\n")){
-                headerFinished = true;
-                headerEnding = request.indexOf("\r\n\r\n");
-            }
+
         }
 
-        private void assignValues(String[] part){
-            assignRequestValues(part[0]);
-            for(int i = 1; i != part.length; i++){
-                assignHeaderValues(part[i]);
-            }
-        }
+        private void getHeaderInfo(InputStream in) throws IOException{
+            final int BUFFERSIZE = 1024;
+            byte[] temp = new byte[BUFFERSIZE];
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int headerEndPos = 0;
 
-        private void assignHeaderValues(String part){
-            String[] header = part.split(": ");
-            switch(header[0].toLowerCase()){
-                case "host":
-                    host = header[1];
+            while(true){
+                int bytesRead = in.read(temp,0, BUFFERSIZE);
+                if (bytesRead == -1){
                     break;
-                case "content":
-                    content = ContentType.valueOf(header[1]);
+                }
+                buffer.write(temp, 0, bytesRead);
+                headerEndPos = checkLineBreak(buffer);
+                if (headerEndPos != -1){
+                    headerEnding = headerEndPos;
                     break;
-                case "content-length":
-                    contentLength = Integer.parseInt(header[1]);
+                }
             }
-
+            this.packet = buffer.toByteArray();
+            this.header = Arrays.copyOfRange(packet, 0, headerEndPos);
+            storeHeaderValues(header);
         }
 
+        private static int checkLineBreak(ByteArrayOutputStream in){
+            byte[] inByteArray = in.toByteArray();
+            byte[] lineBreak = { 0x0D,0x0A,0x0D,0x0A};
+            byte[] temp = new byte[4];
+            for(int i = 0; i != inByteArray.length-3;i++){
+                temp = Arrays.copyOfRange(inByteArray,i,i+4);
+                if (Arrays.equals(lineBreak,temp)){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
         private void assignRequestValues(String line) {
             String[] words = line.split(" ");
             method = Method.valueOf(words[0]);
@@ -71,17 +85,32 @@ public class HttpFormat {
             version = words[2].split("/")[1];
         }
 
-        public Method getMethod() {
-            return method;
+        private void assignHeaderValues(String line){
+            String[] parts = line.split(":");
+            parts[0] = parts[0].trim();
+            parts[1] = parts[1].trim();
+            switch(parts[0].toLowerCase()){
+                case "host":
+                    host = parts[1];
+                    break;
+                case "content":
+                    content = ContentType.valueOf(parts[1]);
+                    break;
+                case "content-length":
+                    contentLength = Integer.parseInt(parts[1]);
+                    break;
+            }
         }
 
-        public String getPath() {
-            return path;
+        private void storeHeaderValues(byte[] headerRaw){
+            String header = new String(headerRaw,StandardCharsets.UTF_8);
+            String[] parts = header.split("\r\n");
+            assignRequestValues(parts[0]);
+            for(int i = 1; i != parts.length;i++){
+                assignHeaderValues(parts[i]);
+            }
         }
-
-        public String getVersion() {
-            return version;
-        }
+        
     }
 
     public static class Response{
