@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - Not Found</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: url("what-is-kaworu-sitting-on-v0-hpylib0vwdzd1.webp") no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar */
+        .top-bar {
+            height: 60px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .home-btn {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            border: 1px solid black;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .home-btn:hover {
+            background: black;
+            color: white;
+        }
+
+        /* Center content */
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .error-box {
+            text-align: center;
+        }
+
+        .error-text {
+            font-size: 120px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .sub-text {
+            margin-top: 10px;
+            font-size: 28px;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="/main.html" class="home-btn">Return Home</a>
+    </div>
+
+    <div class="content">
+        <div class="error-box">
+            <div class="error-text">404</div>
+            <div class="sub-text">File Not Found</div>
+        </div>
+    </div>
+
+</body>
+</html>
