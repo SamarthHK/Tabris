@@ -62,6 +62,7 @@ public class HttpFormat {
             }
             this.packet = buffer.toByteArray();
             this.header = Arrays.copyOfRange(packet, 0, headerEndPos);
+            this.body = Arrays.copyOfRange(packet, headerEndPos+4,packet.length);
             storeHeaderValues(header);
         }
 
