@@ -35,7 +35,7 @@ public class Main {
             try{
                 request = readRequest(client);
                 
-                HttpFormat.Response response = Router.getResponse(request.getPath(),request.getMethod());
+                HttpFormat.Response response = Router.createResponse(request.getPath(),request.getMethod());
                 
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());

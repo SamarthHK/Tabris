@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import com.viveka01.format.*;
@@ -12,6 +14,7 @@ import java.lang.NullPointerException;
 
 public class Router {
     private static Dictionary<String,Dictionary<Method,String>> route = new Hashtable<>();
+    private static final String frontEndDir = "src\\main\\resources\\static";
     static{
         
         addRoute("/",Method.GET,"src\\main\\frontEnd\\premain.html");
@@ -31,36 +34,41 @@ public class Router {
         temp.put(code,FilePath);
         route.put(path,temp);
     }
-    /**
-     * @param Takes client path and http code
-     * @return Returns response object
-     */
-    public static HttpFormat.Response getResponse(String path,Method code) throws IOException{
-        String filePath = "";
-        try{
-            filePath = route.get(path).get(code);
-        }catch (NullPointerException e){
-            filePath = "src\\main\\frontEnd\\fileNotFound.html";
-            File file = new File(filePath);
-            FileInputStream readFile = new FileInputStream(file);
-            byte[] body = new byte[readFile.available()];
-            readFile.read(body);
-            readFile.close();
-            return new Response(404, ContentType.HTML, body);
-        }
-        
-        System.out.println(filePath);
-        File file = new File(filePath);
-        if(!file.exists()){
-            return new Response(500,ContentType.PLAIN,"File Not Found".getBytes(StandardCharsets.UTF_8));
-        }
-        String fileType = filePath.split("\\.")[1].toUpperCase();
 
+    private static byte[] getFileBytes(String filePath) throws IOException{
+        File file = new File(filePath);
         FileInputStream readFile = new FileInputStream(file);
         byte[] body = new byte[readFile.available()];
         readFile.read(body);
         readFile.close();
-
-        return new Response(200, ContentType.valueOf(fileType), body);
+        return body;
     }
+
+    /**
+     * @param Takes client path and http code
+     * @return Returns response object
+     */
+    public static HttpFormat.Response createResponse(String path,Method code) throws IOException{
+        switch (code) {
+            case GET:
+                return getResponse(path);        
+            default:
+                return new Response(500,"Unsupported response type");
+        }
+    }
+    /**
+     * @param Takes client path and http code
+     * @return Returns response object
+     */
+    private static HttpFormat.Response getResponse(String path) throws IOException{
+        String filePath = Paths.get(frontEndDir,path).toString(); 
+        System.out.println(filePath);
+        File file = new File(filePath);
+        if(!file.exists()){
+            return new Response(404,"File Not Found");
+        }
+        String fileType = filePath.split("\\.")[1].toUpperCase();
+        return new Response(200, ContentType.valueOf(fileType), getFileBytes(filePath));
+    }
+    
 }

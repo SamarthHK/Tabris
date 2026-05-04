@@ -76,6 +76,24 @@ public class HttpFormat {
                     reasonPhrase = "Internal Server Error"; 
             }
         }
+        public Response(int statusCode,String message){
+            this.statusCode = statusCode;
+            this.contentType = ContentType.PLAIN;
+            this.connection = ConnectionCodes.CLOSE;
+            this.body = message.getBytes(StandardCharsets.UTF_8);
+            this.contentLength = body.length;
+
+            switch(statusCode){
+                case 200:
+                    reasonPhrase = "OK";
+                    break;
+                case 404:
+                    reasonPhrase = "Not Found";
+                    break;
+                case 500:
+                    reasonPhrase = "Internal Server Error";
+            }
+        }
         /**
          * @return gives whole byte array response
          */
