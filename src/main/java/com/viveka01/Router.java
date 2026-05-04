@@ -16,15 +16,7 @@ public class Router {
     private static Dictionary<String,Dictionary<Method,String>> route = new Hashtable<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
-        
-        addRoute("/",Method.GET,"src\\main\\frontEnd\\premain.html");
-        addRoute("/main.html",Method.GET,"src\\main\\frontEnd\\main.html");
-        addRoute("/externalRemixxer.css",Method.GET,"src\\main\\frontEnd\\externalRemixxer.css");
-        addRoute("/favicon.ico",Method.GET,"src\\main\\frontEnd\\kaoru.png");
-        addRoute("/remixxerGallery.html",Method.GET,"src\\main\\frontEnd\\remixxerGallery.html");
-        addRoute("/loginRemixxer.html",Method.GET,"src\\main\\frontEnd\\loginRemixxer.html");
-        addRoute("/kaoru.png",Method.GET,"src\\main\\frontEnd\\kaoru.png");
-        addRoute("/what-is-kaworu-sitting-on-v0-hpylib0vwdzd1.webp",Method.GET,"src\\main\\frontEnd\\what-is-kaworu-sitting-on-v0-hpylib0vwdzd1.webp");
+        addRoute("/",Method.GET,"src\\main\\resources\\static\\premain.html");
     }
     /**
      * @param Takes client path, http code, and server file path
@@ -61,8 +53,13 @@ public class Router {
      * @return Returns response object
      */
     private static HttpFormat.Response getResponse(String path) throws IOException{
-        String filePath = Paths.get(frontEndDir,path).toString(); 
-        System.out.println(filePath);
+        String filePath;
+        try{
+            filePath = route.get(path).get(Method.GET);
+        }catch (NullPointerException e){
+            filePath = Paths.get(frontEndDir,path).toString();
+        }
+        System.out.printf("Retrieving file: %s\n",filePath);
         File file = new File(filePath);
         if(!file.exists()){
             return new Response(404,"File Not Found");
