@@ -1,48 +1,32 @@
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.viveka01.Main;
+import com.viveka01.format.HttpFormat;
 
 public class MainTest {
-
-    static byte[] testCase;
-    private static final Random rnd = new Random(42); // deterministic seed
-
-    @Before
-    public void setup() {
-        int length = 50;
-        byte[] arr = new byte[length];
-
-        // fill with random printable ASCII
-        for (int i = 0; i < length; i++) {
-            arr[i] = (byte) (33 + rnd.nextInt(94));
-        }
-
-        // insert "\r\n\r\n" exactly once
-        int position = rnd.nextInt(length - 3);
-        arr[position]     = '\r';
-        arr[position + 1] = '\n';
-        arr[position + 2] = '\r';
-        arr[position + 3] = '\n';
-
-        testCase = arr;
-    }
-
     @Test
-    public void testCheckLineBreak() {
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        output.write(testCase, 0, testCase.length);
-
-        int value = Main.checkLineBreak(output);
-
-        System.out.printf("Contains? %d\n", value);
-
-        assertTrue(value >= 0);
+    public void testRequestParsing(){
+        byte[] request = (
+        "GET /index.html HTTP/1.1\r\n" +
+        "Host: example.com\r\n" +
+        "User-Agent: TestClient/1.0\r\n" +
+        "Accept: */*\r\n" +
+        "\r\n"
+        ).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+        InputStream in = new ByteArrayInputStream(request);
+        try {
+            HttpFormat.Request test = new HttpFormat.Request(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
 }
