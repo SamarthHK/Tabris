@@ -32,84 +32,33 @@ public class HttpFormat {
         int headerEnding;
         //body checks
         Boolean bodyFinished = false;
-        
-        public Request(InputStream request){
-            try {
-                getHeaderInfo(request);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        private void getHeaderInfo(InputStream in) throws IOException{
-            final int BUFFERSIZE = 1024;
-            byte[] temp = new byte[BUFFERSIZE];
+        //Constants
+        final int BUFFER_SIZE = 1024; 
+        public Request(InputStream in) throws IOException{
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int headerEndPos = 0;
-
-            while(true){
-                int bytesRead = in.read(temp,0, BUFFERSIZE);
-                if (bytesRead == -1){
-                    break;
-                }
-                buffer.write(temp, 0, bytesRead);
-                headerEndPos = checkLineBreak(buffer);
-                if (headerEndPos != -1){
-                    headerEnding = headerEndPos;
-                    break;
-                }
+            byte[] read = new byte[BUFFER_SIZE];
+            byte[] oldRead = new byte[BUFFER_SIZE];
+            int bytesRead = in.read(read);
+            while (true){
+                if (bytesRead == -1) continue;
+                oldRead = Arrays.copyOf(read, bytesRead);
+                bytesRead = in.read(read);
+                buffer.write(read,0,bytesRead);
             }
-            this.packet = buffer.toByteArray();
-            this.header = Arrays.copyOfRange(packet, 0, headerEndPos);
-            this.body = Arrays.copyOfRange(packet, headerEndPos+4,packet.length);
-            storeHeaderValues(header);
         }
+        private int checkLineBreak(byte[] read) {
+            byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
+            int lineBreakLength = lineBreak.length;
 
-        private static int checkLineBreak(ByteArrayOutputStream in){
-            byte[] inByteArray = in.toByteArray();
-            byte[] lineBreak = { 0x0D,0x0A,0x0D,0x0A};
-            byte[] temp = new byte[4];
-            for(int i = 0; i != inByteArray.length-3;i++){
-                temp = Arrays.copyOfRange(inByteArray,i,i+4);
-                if (Arrays.equals(lineBreak,temp)){
+            for (int i = 0; i <= read.length - lineBreakLength; i++) {
+                byte[] comparison = Arrays.copyOfRange(read, i, i + lineBreakLength);
+
+                if (Arrays.equals(comparison, lineBreak)) {
                     return i;
                 }
             }
+
             return -1;
-        }
-        
-        private void assignRequestValues(String line) {
-            String[] words = line.split(" ");
-            method = Method.valueOf(words[0]);
-            path = words[1];
-            version = words[2].split("/")[1];
-        }
-
-        private void assignHeaderValues(String line){
-            String[] parts = line.split(":");
-            parts[0] = parts[0].trim();
-            parts[1] = parts[1].trim();
-            switch(parts[0].toLowerCase()){
-                case "host":
-                    host = parts[1];
-                    break;
-                case "content":
-                    content = ContentType.valueOf(parts[1]);
-                    break;
-                case "content-length":
-                    contentLength = Integer.parseInt(parts[1]);
-                    break;
-            }
-        }
-
-        private void storeHeaderValues(byte[] headerRaw){
-            String header = new String(headerRaw,StandardCharsets.UTF_8);
-            String[] parts = header.split("\r\n");
-            assignRequestValues(parts[0]);
-            for(int i = 1; i != parts.length;i++){
-                assignHeaderValues(parts[i]);
-            }
         }
         
     }
