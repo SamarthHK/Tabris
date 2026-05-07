@@ -33,12 +33,12 @@ public class Main {
             final Socket client = server.accept();
             HttpFormat.Request request;
             try{
-                request = HttpFormat.Request(client.getInputStream());
+                // request = HttpFormat.Request(client.getInputStream());
                 
-                HttpFormat.Response response = Router.createResponse(request.getPath(),request.getMethod());
+                // HttpFormat.Response response = Router.createResponse(request.getPath(),request.getMethod());
                 
                 OutputStream sendResponse = client.getOutputStream();
-                sendResponse.write(response.getResponse());
+                // sendResponse.write(response.getResponse());
                 sendResponse.flush();
                 sendResponse.close();  
 

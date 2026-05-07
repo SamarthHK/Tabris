@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import javax.swing.text.AbstractDocument.Content;
+
+import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 
@@ -37,14 +39,22 @@ public class HttpFormat {
         public Request(InputStream in) throws IOException{
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             byte[] read = new byte[BUFFER_SIZE];
-            byte[] oldRead = new byte[BUFFER_SIZE];
-            int bytesRead = in.read(read);
+            int lineBreakPos;
+
             while (true){
-                if (bytesRead == -1) continue;
-                oldRead = Arrays.copyOf(read, bytesRead);
-                bytesRead = in.read(read);
+                int bytesRead = in.read(read);
+                if (bytesRead == -1) break;
+
                 buffer.write(read,0,bytesRead);
+                RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
+                temp.addData(read);
+
+                lineBreakPos = checkLineBreak(temp.toArray());
+                if (lineBreakPos != -1){
+                    break;
+                }
             }
+            System.out.println(buffer.toString(StandardCharsets.UTF_8));
         }
         private int checkLineBreak(byte[] read) {
             byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
