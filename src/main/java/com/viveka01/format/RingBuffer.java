@@ -1,12 +1,15 @@
 package com.viveka01.format;
+
 /**
- * RingBuffer: Keeps track of data added and old data in order, but stays constent length
+ * RingBuffer: Keeps track of data added and old data in order, but stays
+ * constent length
  */
 public class RingBuffer {
     private final byte[] buffer;
     private final int capacity;
     private int writePosition = 0;
     private int size = 0;
+
     /**
      * @param bufferSize how big the buffer should be
      */
@@ -27,8 +30,10 @@ public class RingBuffer {
             }
         }
     }
+
     /**
-     * @return returns the current buffer, in proper order, and a copy so you cant change the original
+     * @return returns the current buffer, in proper order, and a copy so you cant
+     *         change the original
      */
     public byte[] toArray() {
         byte[] result = new byte[size];

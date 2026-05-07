@@ -40,13 +40,12 @@ public class HttpFormat {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             byte[] read = new byte[BUFFER_SIZE];
             int lineBreakPos = 0;
-
+            RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
             while (true){
                 int bytesRead = in.read(read);
                 if (bytesRead == -1) break;
 
                 buffer.write(read,0,bytesRead);
-                RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
                 temp.addData(read);
 
                 lineBreakPos = checkLineBreak(temp.toArray());
@@ -58,9 +57,11 @@ public class HttpFormat {
             parseHeader(header);
             System.out.println(buffer.toString(StandardCharsets.UTF_8));
         }
+
         public void printRequestParams(){
             System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d",method,path,version,host,content.getContentType(),contentLength);
         }
+
         private int checkLineBreak(byte[] read) {
             byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
             int lineBreakLength = lineBreak.length;

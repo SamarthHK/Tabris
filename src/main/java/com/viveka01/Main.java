@@ -13,38 +13,40 @@ import com.viveka01.format.*;
 import java.util.*;
 
 public class Main {
+
     public static void main(String args[]) throws IOException {
         final int port = 80;
         ServerSocket server;
-        try{
+        try {
             server = new ServerSocket(port);
-        }catch (IOException e){
-            System.out.printf("Couldnt start socket on port: %d\n",port);
+        } catch (IOException e) {
+            System.out.printf("Couldnt start socket on port: %d\n", port);
             e.printStackTrace();
             return;
         }
-        //Formating return statement
+        // Formating return statement
         final String messageStr = "Listening on port %d....";
-        final String result = String.format(messageStr,port);
+        final String result = String.format(messageStr, port);
         System.out.println(result);
-        //opening connection
+        // opening connection
         while (true) {
-            //opening connection to accept all responses
+            // opening connection to accept all responses
             final Socket client = server.accept();
             HttpFormat.Request request;
-            try{
+            try {
                 // request = HttpFormat.Request(client.getInputStream());
-                
-                // HttpFormat.Response response = Router.createResponse(request.getPath(),request.getMethod());
-                
+
+                // HttpFormat.Response response =
+                // Router.createResponse(request.getPath(),request.getMethod());
+
                 OutputStream sendResponse = client.getOutputStream();
                 // sendResponse.write(response.getResponse());
                 sendResponse.flush();
-                sendResponse.close();  
+                sendResponse.close();
 
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            } 
+            }
         }
     }
 }
