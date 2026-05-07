@@ -16,15 +16,17 @@ public class MainTest {
     @Test
     public void testRequestParsing(){
         byte[] request = (
-        "GET /index.html HTTP/1.1\r\n" +
+        "POST /api/data HTTP/1.1\r\n" +
         "Host: example.com\r\n" +
-        "User-Agent: TestClient/1.0\r\n" +
-        "Accept: */*\r\n" +
-        "\r\n"
+        "Content-Type: application/json\r\n" +
+        "Content-Length: 17\r\n" +
+        "\r\n" +
+        "{\"x\":10,\"y\":20}"
         ).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
         InputStream in = new ByteArrayInputStream(request);
         try {
             HttpFormat.Request test = new HttpFormat.Request(in);
+            test.printRequestParams();
         } catch (IOException e) {
             e.printStackTrace();
         } 

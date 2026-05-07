@@ -27,7 +27,7 @@ public class HttpFormat {
         String version;
         //Header
         String host;
-        ContentType content;
+        ContentType content = ContentType.EMPTY;
         int contentLength = 0;
         //Header Checks
         Boolean headerFinished = false;
@@ -39,7 +39,7 @@ public class HttpFormat {
         public Request(InputStream in) throws IOException{
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             byte[] read = new byte[BUFFER_SIZE];
-            int lineBreakPos;
+            int lineBreakPos = 0;
 
             while (true){
                 int bytesRead = in.read(read);
@@ -54,7 +54,12 @@ public class HttpFormat {
                     break;
                 }
             }
+            String[] header = buffer.toString(StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
+            parseHeader(header);
             System.out.println(buffer.toString(StandardCharsets.UTF_8));
+        }
+        public void printRequestParams(){
+            System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d",method,path,version,host,content.getContentType(),contentLength);
         }
         private int checkLineBreak(byte[] read) {
             byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
@@ -67,11 +72,38 @@ public class HttpFormat {
                     return i;
                 }
             }
-
             return -1;
         }
-        
+        private void parseHeader(String[] lines){
+            getRequestLine(lines[0]);
+            for(int i = 1;i != lines.length;i++){
+                getHeaders(lines[i]);
+            }
+        }
+        private void getRequestLine(String line){
+            String[] parts = line.split(" ");
+            method = Method.valueOf(parts[0]);
+            path = parts[1];
+            version = parts[2];
+        }
+        private void getHeaders(String line){
+            String[] parts = line.split(":",2);
+            parts[0] = parts[0].trim().toLowerCase();
+
+            switch(parts[0]){
+                case "host":
+                    this.host = parts[1];
+                    break;
+                case "content-type":
+                    this.content = ContentType.stringToContentType(parts[1]);
+                    break;
+                case "content-length":
+                    this.contentLength = Integer.parseInt(parts[1].strip());
+                    break;
+            }
+        }
     }
+
 
     public static class Response{
         //Status Line

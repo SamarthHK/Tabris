@@ -3,6 +3,9 @@ package com.viveka01.format;
  *Holding all the content types
  */
 public enum ContentType{
+    //Misc
+    EMPTY("EMPTY","EMPTY"),
+    UNSUPORTED("EMPTY","EMPTY"),
     //text
     PLAIN("text","plain"),
     HTML("text","html"),
@@ -37,6 +40,19 @@ public enum ContentType{
      */
     public String getContentType(){
         return mediaType + "/" + mediaFormat;
+    }
+    /**
+     * @param in String representing the content type, in form of mediaType/mediaFormat
+     * @return returns the ContentType enum, or UNSUPORTED if it couldnt be found
+     */
+    static public ContentType stringToContentType(String in){
+        String[] vals = in.strip().toUpperCase().split("/");
+        try{
+            return ContentType.valueOf(vals[1]);
+        }catch (IllegalArgumentException e){
+            return ContentType.UNSUPORTED;
+        }
+        
     }
     /**
      * @return returns type of media
