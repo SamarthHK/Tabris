@@ -41,9 +41,10 @@ public class HttpFormat {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             byte[] read = new byte[BUFFER_SIZE];
             int lineBreakPos = 0;
+            int bytesRead;
             RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
             while (true){
-                int bytesRead = in.read(read);
+                bytesRead = in.read(read);
                 amountRead += bytesRead;
                 if (bytesRead == -1) break;
 
@@ -58,12 +59,41 @@ public class HttpFormat {
                     break;
                 }
             }
+            this.header = buffer.toByteArray();
             String[] header = buffer.toString(StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
             parseHeader(header);
             System.out.printf("contentLength: %d\nlineBreakPos: %d\namountRead: %d\n",contentLength,lineBreakPos,amountRead);
             System.out.printf("Length of array: %d\n",buffer.toByteArray().length);
+
+            int remainingBytes = amountRead-lineBreakPos+4;
+            remainingBytes = contentLength-remainingBytes;
+            System.out.println(remainingBytes);
+            while(remainingBytes > 0){
+                bytesRead = in.read(read);
+                if (bytesRead == -1) break;
+                remainingBytes -= bytesRead;
+                buffer.write(read,0,bytesRead);
+            }
+            this.packet = buffer.toByteArray();
+            this.body = new byte[contentLength];
+            System.arraycopy(this.packet, lineBreakPos+4, this.body, 0,contentLength);
         }
 
+        public void printPacket(){
+            printRequestParams();
+            printBody();
+        }
+        public void printBody(){
+            try{
+                System.out.println("Body:");
+                System.out.write(this.body);
+                System.out.println();
+            }
+            catch (IOException e){
+                System.out.println("COULDNT PRINT");
+                e.printStackTrace();
+            }
+        }
         public void printRequestParams(){
             System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d\n",method,path,version,host,content.getContentType(),contentLength);
         }
