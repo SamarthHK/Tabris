@@ -31,11 +31,12 @@ public class HttpFormat {
         int contentLength = 0;
         //Header Checks
         Boolean headerFinished = false;
-        int headerEnding;
+        int amountRead = 0;
         //body checks
         Boolean bodyFinished = false;
         //Constants
-        final int BUFFER_SIZE = 1024; 
+        final int BUFFER_SIZE = 32; 
+
         public Request(InputStream in) throws IOException{
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             byte[] read = new byte[BUFFER_SIZE];
@@ -43,36 +44,40 @@ public class HttpFormat {
             RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
             while (true){
                 int bytesRead = in.read(read);
+                amountRead += bytesRead;
                 if (bytesRead == -1) break;
 
                 buffer.write(read,0,bytesRead);
-                temp.addData(read);
+                temp.addData(read,bytesRead);
 
                 lineBreakPos = checkLineBreak(temp.toArray());
                 if (lineBreakPos != -1){
+                    System.out.println(temp.getGlobal());
+                    lineBreakPos += temp.getGlobal();
+                    
                     break;
                 }
             }
             String[] header = buffer.toString(StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
             parseHeader(header);
-            System.out.println(buffer.toString(StandardCharsets.UTF_8));
+            System.out.printf("contentLength: %d\nlineBreakPos: %d\namountRead: %d\n",contentLength,lineBreakPos,amountRead);
+            System.out.printf("Length of array: %d\n",buffer.toByteArray().length);
         }
 
         public void printRequestParams(){
-            System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d",method,path,version,host,content.getContentType(),contentLength);
+            System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d\n",method,path,version,host,content.getContentType(),contentLength);
         }
         /**
          * @param read byte array of the request
          * @return returns position of lineBreak, else returns -1
          */
         private int checkLineBreak(byte[] read) {
-            byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
-            int lineBreakLength = lineBreak.length;
+            for (int i = 0; i <= read.length - 4; i++) {
+                if (read[i] == 0x0D &&
+                    read[i + 1] == 0x0A &&
+                    read[i + 2] == 0x0D &&
+                    read[i + 3] == 0x0A) {
 
-            for (int i = 0; i <= read.length - lineBreakLength; i++) {
-                byte[] comparison = Arrays.copyOfRange(read, i, i + lineBreakLength);
-
-                if (Arrays.equals(comparison, lineBreak)) {
                     return i;
                 }
             }

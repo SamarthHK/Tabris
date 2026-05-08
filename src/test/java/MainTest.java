@@ -28,13 +28,14 @@ public class MainTest {
             "X-Forwarded-For: 192.168.1.10\r\n" +
             "X-Request-ID: req-123456789\r\n" +
             "Content-Type: application/json\r\n" +
-            "Content-Length: 276\r\n" +
+            "Content-Length: 256\r\n" +
             "\r\n" +
             "{\"user\":{\"username\":\"samarth\",\"password\":\"supersecretpassword\",\"email\":\"samarth@example.com\",\"roles\":[\"admin\",\"developer\",\"tester\"],\"profile\":{\"firstName\":\"Samarth\",\"lastName\":\"Kumar\",\"age\":15,\"bio\":\"Testing large HTTP parser request body handling.\"}}}"
-        ).getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+        ).getBytes(java.nio.charset.StandardCharsets.UTF_8);
         InputStream in = new ByteArrayInputStream(request);
         try {
             HttpFormat.Request test = new HttpFormat.Request(in);
+            System.out.printf("Amount of bytes to read: %d\n",request.length);
             test.printRequestParams();
         } catch (IOException e) {
             e.printStackTrace();
