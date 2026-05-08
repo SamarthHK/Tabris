@@ -61,7 +61,10 @@ public class HttpFormat {
         public void printRequestParams(){
             System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d",method,path,version,host,content.getContentType(),contentLength);
         }
-
+        /**
+         * @param read byte array of the request
+         * @return returns position of lineBreak, else returns -1
+         */
         private int checkLineBreak(byte[] read) {
             byte[] lineBreak = {0x0D, 0x0A, 0x0D, 0x0A};
             int lineBreakLength = lineBreak.length;
@@ -75,18 +78,28 @@ public class HttpFormat {
             }
             return -1;
         }
+        /**
+         * @param lines takes string array of http request seperated by \r\n
+         */
         private void parseHeader(String[] lines){
             getRequestLine(lines[0]);
             for(int i = 1;i != lines.length;i++){
                 getHeaders(lines[i]);
             }
         }
+        /**
+         * @param line takes string input of the line and gets method, path and http version of client
+         */
         private void getRequestLine(String line){
             String[] parts = line.split(" ");
             method = Method.valueOf(parts[0]);
             path = parts[1];
             version = parts[2];
         }
+        /**
+         * @param line single line from http request in string format
+         * Assigns host, content, and contentLenght values from line
+         */
         private void getHeaders(String line){
             String[] parts = line.split(":",2);
             parts[0] = parts[0].trim().toLowerCase();
