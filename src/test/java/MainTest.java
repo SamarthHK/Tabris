@@ -20,9 +20,9 @@ public class MainTest {
         try (FileInputStream read = new FileInputStream(testImage)){
             byte[] image;
             image = read.readAllBytes();
-            ImageReciever.storeImage(ContentType.PNG, image);
-            ImageReciever.storeImage(ContentType.PNG, image);
-            ImageReciever.storeImage(ContentType.PNG, image);
+            System.out.println(ImageReciever.storeImage(ContentType.PNG, image));
+            System.out.println(ImageReciever.storeImage(ContentType.PNG, image));
+            System.out.println(ImageReciever.storeImage(ContentType.PNG, image));
         } catch (IOException e) {
             e.printStackTrace();
         }
