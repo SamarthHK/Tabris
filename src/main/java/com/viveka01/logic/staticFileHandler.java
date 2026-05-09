@@ -21,21 +21,22 @@ public class staticFileHandler {
         try{
             filePath = Paths.get(frontEndDir,path).toString();
         }catch (InvalidPathException e){
-            filePath = fileNotFoundPath;
+            return HttpFormat.Response.SERVER_ERROR;
         }
 
         System.out.printf("Retrieving file: %s\n", filePath);
         File file = new File(filePath);
 
         if (!file.exists()) {
-            throw new FileNotFoundException("File doesnt exist");
+            filePath = fileNotFoundPath;
+            file = new File(filePath);
         }
 
         String fileType = filePath.split("\\.")[1].toUpperCase();
         try {
             return new Response(200, ContentType.valueOf(fileType), getFileBytes(filePath));
         } catch (IOException e) {
-            throw new IOException("Error retrieving file");
+            return HttpFormat.Response.SERVER_ERROR;
         }
     }
 

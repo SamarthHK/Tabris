@@ -239,6 +239,7 @@ public class HttpFormat {
                              "Date: " + date + "\r\n" + 
                              "Server: " + SERVER + "\r\n" + 
                              "\r\n";
+            System.out.println(strHeader);
             byte[] byteHeader = strHeader.getBytes(StandardCharsets.UTF_8);
             byte[] response = new byte[byteHeader.length + contentLength];
             System.arraycopy(byteHeader,0,response,0,byteHeader.length);
