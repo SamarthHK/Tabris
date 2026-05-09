@@ -27,11 +27,6 @@ public class Router {
         temp.put(code, FilePath);
         route.put(path, temp);
     }
-    public static void addRoute(String path, Method code, FileMapper obj) {
-        Dictionary<Method, Object> temp = new Hashtable<>();
-        temp.put(code, obj);
-        route.put(path, temp);
-    }
     /**
      * @param Takes client path and http code
      * @return Returns response object

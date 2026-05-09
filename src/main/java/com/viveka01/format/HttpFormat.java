@@ -168,6 +168,7 @@ public class HttpFormat {
 
 
     public static class Response{
+        public static final Response SERVER_ERROR = new HttpFormat.Response(500, "Server Error");
         //Status Line
         final String VERSION = "1.1";
         int statusCode;

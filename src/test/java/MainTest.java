@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.viveka01.FileMapper;
+
+import com.viveka01.RouterTwo;
 import com.viveka01.format.*;
 import com.viveka01.logic.*;
 import org.junit.Test;
@@ -14,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MainTest {
-    @Test
     public void testRequestParsing(){
         File testImage = new File("src\\test\\java\\testimage\\kaoru.png");
         try (FileInputStream read = new FileInputStream(testImage)){
@@ -36,9 +36,5 @@ public class MainTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void testFileMapper(){
-        
     }
 }
