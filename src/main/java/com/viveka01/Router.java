@@ -2,11 +2,9 @@ package com.viveka01;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import com.viveka01.format.*;
@@ -51,7 +49,12 @@ public class Router {
         try {
             filePath = route.get(path).get(Method.GET);
         } catch (NullPointerException e) {
-            filePath = Paths.get(frontEndDir, path).toString();
+            try{
+                filePath = Paths.get(frontEndDir, path).toString();
+            }catch (InvalidPathException er){
+                filePath = "src\\main\\resources\\static\\fileNotFound.html";
+            }
+            
         }
         System.out.printf("Retrieving file: %s\n", filePath);
         File file = new File(filePath);

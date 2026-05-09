@@ -1,15 +1,9 @@
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
-
-import org.junit.Before;
 import org.junit.Test;
-
-import com.viveka01.Main;
 import com.viveka01.format.HttpFormat;
 
 public class MainTest {

@@ -1,16 +1,9 @@
 package com.viveka01;
 
 import java.io.*;
-import java.net.HttpRetryException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import com.viveka01.format.HttpFormat.*;
 import com.viveka01.format.*;
-
-import java.util.*;
 
 public class Main {
 
@@ -34,13 +27,11 @@ public class Main {
             final Socket client = server.accept();
             HttpFormat.Request request;
             try {
-                // request = HttpFormat.Request(client.getInputStream());
-
-                // HttpFormat.Response response =
-                // Router.createResponse(request.getPath(),request.getMethod());
+                request = new HttpFormat.Request(client.getInputStream());
+                HttpFormat.Response response = Router.createResponse(request.getPath(),request.getMethod());
 
                 OutputStream sendResponse = client.getOutputStream();
-                // sendResponse.write(response.getResponse());
+                sendResponse.write(response.getResponse());
                 sendResponse.flush();
                 sendResponse.close();
 

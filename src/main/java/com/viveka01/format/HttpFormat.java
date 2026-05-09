@@ -2,14 +2,9 @@ package com.viveka01.format;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
-import javax.swing.text.AbstractDocument.Content;
-
-import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 
@@ -30,19 +25,20 @@ public class HttpFormat {
         ContentType content = ContentType.EMPTY;
         int contentLength = 0;
         //Header Checks
-        Boolean headerFinished = false;
         int amountRead = 0;
-        //body checks
-        Boolean bodyFinished = false;
+        int lineBreakPos = 0;
         //Constants
-        final int BUFFER_SIZE = 32; 
-
+        final int BUFFER_SIZE = 1024; 
+        /**
+         * @param in socket InputStream
+         * Takes whole InputStream and parse the http request
+         */
         public Request(InputStream in) throws IOException{
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] read = new byte[BUFFER_SIZE];
-            int lineBreakPos = 0;
-            int bytesRead;
             RingBuffer temp = new RingBuffer(BUFFER_SIZE*2);
+            byte[] read = new byte[BUFFER_SIZE];
+            int bytesRead;
+            //Reading header in chunks
             while (true){
                 bytesRead = in.read(read);
                 amountRead += bytesRead;
@@ -50,24 +46,20 @@ public class HttpFormat {
 
                 buffer.write(read,0,bytesRead);
                 temp.addData(read,bytesRead);
-
+                //If line break detected end loop
                 lineBreakPos = checkLineBreak(temp.toArray());
                 if (lineBreakPos != -1){
-                    System.out.println(temp.getGlobal());
                     lineBreakPos += temp.getGlobal();
-                    
                     break;
                 }
             }
+            //parsing header values
             this.header = buffer.toByteArray();
-            String[] header = buffer.toString(StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
-            parseHeader(header);
-            System.out.printf("contentLength: %d\nlineBreakPos: %d\namountRead: %d\n",contentLength,lineBreakPos,amountRead);
-            System.out.printf("Length of array: %d\n",buffer.toByteArray().length);
-
+            parseHeader(this.header);
+            //Getting how much to read
             int remainingBytes = amountRead-lineBreakPos+4;
             remainingBytes = contentLength-remainingBytes;
-            System.out.println(remainingBytes);
+            //Reading in chunks till there are no more remaining bytes left
             while(remainingBytes > 0){
                 bytesRead = in.read(read);
                 if (bytesRead == -1) break;
@@ -78,7 +70,8 @@ public class HttpFormat {
             this.body = new byte[contentLength];
             System.arraycopy(this.packet, lineBreakPos+4, this.body, 0,contentLength);
         }
-
+        //TODO: delete printing methods when done with testing
+        //Created for testing will remove later
         public void printPacket(){
             printRequestParams();
             printBody();
@@ -123,6 +116,14 @@ public class HttpFormat {
             }
         }
         /**
+         * @param roughBody Takes a byte[] that contains a header and potentially some body
+         * parseHeader parses the header part of input and puts the header values in variables (of whatever is supported)
+         */
+        private void parseHeader(byte[] roughBody){
+            String[] header = new String(roughBody,StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
+            parseHeader(header);
+        }
+        /**
          * @param line takes string input of the line and gets method, path and http version of client
          */
         private void getRequestLine(String line){
@@ -150,6 +151,18 @@ public class HttpFormat {
                     this.contentLength = Integer.parseInt(parts[1].strip());
                     break;
             }
+        }
+        /**
+         * @return returns path
+         */
+        public String getPath(){
+            return path;
+        }
+        /**
+         * @return returns method
+         */
+        public Method getMethod(){
+            return method;
         }
     }
 
