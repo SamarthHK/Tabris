@@ -14,9 +14,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MainTest {
+    @Test
     public void testRequestParsing(){
         File testImage = new File("src\\test\\java\\testimage\\kaoru.png");
-        
         try (FileInputStream read = new FileInputStream(testImage)){
             byte[] image;
             image = read.readAllBytes();
@@ -26,8 +26,18 @@ public class MainTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        testImage = new File("src\\test\\java\\testimage\\kaworu.gif");
+        try (FileInputStream read = new FileInputStream(testImage)){
+            byte[] image;
+            image = read.readAllBytes();
+            ImageReciever.storeImage(ContentType.GIF, image);
+            ImageReciever.storeImage(ContentType.GIF, image);
+            ImageReciever.storeImage(ContentType.GIF, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    @Test
+
     public void testFileMapper(){
         
     }

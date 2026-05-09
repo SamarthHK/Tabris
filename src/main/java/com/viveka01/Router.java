@@ -16,7 +16,7 @@ public class Router {
     private static final String frontEndDir = "src\\main\\resources\\static";
     static {
         addRoute("/", Method.GET, "src\\main\\resources\\static\\premain.html");
-        addRoute("/upload", Method.POST, new FileMapper("ImageReciever","StoreFile"));
+        // addRoute("/upload", Method.POST, new FileMapper("ImageReciever","StoreFile"));
     }
     
     /**
