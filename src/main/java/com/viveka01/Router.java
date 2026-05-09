@@ -12,32 +12,46 @@ import com.viveka01.format.HttpFormat.Response;
 import java.lang.NullPointerException;
 
 public class Router {
-    private static Dictionary<String, Dictionary<Method, String>> route = new Hashtable<>();
+    private static Dictionary<String, Dictionary<Method, Object>> route = new Hashtable<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static {
         addRoute("/", Method.GET, "src\\main\\resources\\static\\premain.html");
+        addRoute("/upload", Method.POST, new FileMapper("ImageReciever","StoreFile"));
     }
-
+    
     /**
      * @param Takes client path, http code, and server file path
      */
     public static void addRoute(String path, Method code, String FilePath) {
-        Dictionary<Method, String> temp = new Hashtable<>();
+        Dictionary<Method, Object> temp = new Hashtable<>();
         temp.put(code, FilePath);
         route.put(path, temp);
     }
-
+    public static void addRoute(String path, Method code, FileMapper obj) {
+        Dictionary<Method, Object> temp = new Hashtable<>();
+        temp.put(code, obj);
+        route.put(path, temp);
+    }
     /**
      * @param Takes client path and http code
      * @return Returns response object
      */
-    public static HttpFormat.Response createResponse(String path, Method code) throws IOException {
+    public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
+        String path = request.getPath();
+        Method code = request.getMethod();
         switch (code) {
             case GET:
                 return getResponse(path);
+            // case POST:
+            //     return postResponse(request);
             default:
                 return new Response(500, "Unsupported response type");
         }
+    }
+
+    private static void postResponse(HttpFormat.Request request){
+        System.out.println();
+        //TODO
     }
 
     /**
@@ -47,14 +61,14 @@ public class Router {
     private static HttpFormat.Response getResponse(String path) throws IOException {
         String filePath;
         try {
-            filePath = route.get(path).get(Method.GET);
+            filePath = (String) route.get(path).get(Method.GET);
         } catch (NullPointerException e) {
-            try{
+            try {
                 filePath = Paths.get(frontEndDir, path).toString();
-            }catch (InvalidPathException er){
+            } catch (InvalidPathException er) {
                 filePath = "src\\main\\resources\\static\\fileNotFound.html";
             }
-            
+
         }
         System.out.printf("Retrieving file: %s\n", filePath);
         File file = new File(filePath);
