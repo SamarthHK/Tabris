@@ -1,86 +1,50 @@
 package com.viveka01;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.nio.file.InvalidPathException;
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import com.viveka01.format.*;
-import com.viveka01.format.HttpFormat.Response;
-import java.lang.NullPointerException;
+import com.viveka01.logic.staticFileHandler;
+
 
 public class Router {
-    private static Dictionary<String, Dictionary<Method, Object>> route = new Hashtable<>();
+    private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
-    static {
-        addRoute("/", Method.GET, "src\\main\\resources\\static\\premain.html");
-        // addRoute("/upload", Method.POST, new FileMapper("ImageReciever","StoreFile"));
+    static{
+        addRoute("/staticFile",Method.GET,staticFileHandler::getFrontEndPage);
     }
-    
-    /**
-     * @param Takes client path, http code, and server file path
-     */
-    public static void addRoute(String path, Method code, String FilePath) {
-        Dictionary<Method, Object> temp = new Hashtable<>();
-        temp.put(code, FilePath);
+    public static void addRoute(String path, Method code, RouteHandler method) {
+        Map<Method, RouteHandler> temp = new Hashtable<>();
+        temp.put(code, method);
         route.put(path, temp);
     }
-    /**
-     * @param Takes client path and http code
-     * @return Returns response object
-     */
     public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
         String path = request.getPath();
         Method code = request.getMethod();
-        switch (code) {
-            case GET:
-                return getResponse(path);
-            // case POST:
-            //     return postResponse(request);
-            default:
-                return new Response(500, "Unsupported response type");
-        }
-    }
-
-    private static void postResponse(HttpFormat.Request request){
-        System.out.println();
-        //TODO
-    }
-
-    /**
-     * @param Takes client path and http code
-     * @return Returns response object
-     */
-    private static HttpFormat.Response getResponse(String path) throws IOException {
-        String filePath;
+        path = getFile(path);
         try {
-            filePath = (String) route.get(path).get(Method.GET);
-        } catch (NullPointerException e) {
-            try {
-                filePath = Paths.get(frontEndDir, path).toString();
-            } catch (InvalidPathException er) {
-                filePath = "src\\main\\resources\\static\\fileNotFound.html";
-            }
-
+            RouteHandler handler = route.get(path).get(code);
+            return handler.handle(request);
+        } catch (Exception e) {
+            System.out.println("Yea error....");
         }
-        System.out.printf("Retrieving file: %s\n", filePath);
-        File file = new File(filePath);
-        if (!file.exists()) {
-            return new Response(404, "File Not Found");
+        return HttpFormat.Response.SERVER_ERROR;
+    }
+    private static String getFile(String path){
+        String[] sections = path.split("/");
+        int index = sections.length-1;
+        if (index == -1){
+            return path;
         }
-        String fileType = filePath.split("\\.")[1].toUpperCase();
-        return new Response(200, ContentType.valueOf(fileType), getFileBytes(filePath));
+        if (sections[index].contains(".")){
+            return "/staticFile";
+        }
+        return path;
     }
-
-    private static byte[] getFileBytes(String filePath) throws IOException {
-        File file = new File(filePath);
-        FileInputStream readFile = new FileInputStream(file);
-        byte[] body = new byte[readFile.available()];
-        readFile.read(body);
-        readFile.close();
-        return body;
+    //TODO: Learn Interface indepth
+    @FunctionalInterface
+    public interface RouteHandler{
+        HttpFormat.Response handle(HttpFormat.Request request) throws Exception;
     }
-
 }

@@ -29,7 +29,7 @@ public class Main {
             try {
                 request = new HttpFormat.Request(client.getInputStream());
                 request.printPacket();
-                HttpFormat.Response response = Router.createResponse(request);
+                HttpFormat.Response response = RouterOld.createResponse(request);
 
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
