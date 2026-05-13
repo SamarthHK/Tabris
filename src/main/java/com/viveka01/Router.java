@@ -13,6 +13,7 @@ public class Router {
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
         addRoute("/staticFile",Method.GET,StaticFileHandler::getFrontEndPage);
+        addRoute("/cors",Method.OPTIONS,CorsAccept::handleCors);
         addRoute("/upload", Method.POST, ImageReciever::storeImage);
     }
     public static void addRoute(String path, Method code, RouteHandler method) {
@@ -24,6 +25,7 @@ public class Router {
         request.printRequestParams();
         String path = request.getPath();
         Method code = request.getMethod();
+        path = getCors(code, path);
         path = getFile(path);
         try {
             System.out.println("Content: "+request.getContent());
@@ -35,6 +37,12 @@ public class Router {
             e.printStackTrace();
         }
         return HttpFormat.Response.SERVER_ERROR;
+    }
+    private static String getCors(Method method, String path){
+        if (method == Method.OPTIONS){
+            return "/cors";
+        }
+        return path;
     }
     private static String getFile(String path){
         String[] sections = path.split("/");

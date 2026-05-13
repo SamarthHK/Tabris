@@ -24,6 +24,9 @@ public class HttpFormat {
         String host;
         ContentType content = ContentType.EMPTY;
         int contentLength = 0;
+        String origin;
+        String accessControlRequestMethod;
+        String accessControlRequestHeaders;
         //Header Checks
         int amountRead = 0;
         int lineBreakPos = 0;
@@ -128,6 +131,7 @@ public class HttpFormat {
          */
         private void getRequestLine(String line){
             String[] parts = line.split(" ");
+            System.out.println("Method before bug: "+parts[0]);
             method = Method.valueOf(parts[0]);
             path = parts[1];
             version = parts[2];
@@ -149,6 +153,15 @@ public class HttpFormat {
                     break;
                 case "content-length":
                     this.contentLength = Integer.parseInt(parts[1].strip());
+                    break;
+                case "origin":
+                    this.origin = parts[1].strip();
+                    break;
+                case "access-control-request-method":
+                    this.accessControlRequestMethod = parts[1].strip();
+                    break;
+                case "access-control-request-headers":
+                    this.accessControlRequestHeaders = parts[1].strip();
                     break;
             }
         }
@@ -173,6 +186,12 @@ public class HttpFormat {
         public String getHost(){
             return host;
         }
+        public String getRequestMethod(){
+            return accessControlRequestMethod;
+        }
+        public String getRequestHeader(){
+            return accessControlRequestMethod;
+        }
     }
 
 
@@ -188,6 +207,9 @@ public class HttpFormat {
         ConnectionCodes connection;
         String date;
         final String SERVER = "Munna-01";
+        String origin = "*";
+        String accessControlAllowMethod = "OPTIONS";
+        String accessControlAllowHeaders = "Content-Type";
         //Body
         byte[] body;
         /**
@@ -212,6 +234,21 @@ public class HttpFormat {
                 case 500:
                     reasonPhrase = "Internal Server Error"; 
             }
+        }
+        /**
+         * Used for CORS response, use other methods ATM for responses
+         * @param request http request object
+         */
+        public Response(HttpFormat.Request request){
+            this.statusCode = 204;
+            this.contentType = ContentType.EMPTY;
+            this.contentLength = 0;
+            this.connection = ConnectionCodes.ALIVE;
+            this.body = new byte[0];
+            this.origin = "*";
+            this.accessControlAllowHeaders = request.getRequestHeader();
+            this.accessControlAllowMethod = request.getRequestMethod();
+            this.reasonPhrase = "No content";
         }
         /**
          * @param statusCode http response code
@@ -248,6 +285,9 @@ public class HttpFormat {
                              connection.getLine() + "\r\n" + 
                              "Date: " + date + "\r\n" + 
                              "Server: " + SERVER + "\r\n" + 
+                             "Access-Control-Allow-Origin: " + origin + "\r\n" +
+                             "Access-Control-Allow-Methods: " + accessControlAllowMethod + "\r\n" +
+                             "Access-Control-Allow-Headers: " + accessControlAllowHeaders + "\r\n" +
                              "\r\n";
             System.out.println(strHeader);
             byte[] byteHeader = strHeader.getBytes(StandardCharsets.UTF_8);
