@@ -19,7 +19,7 @@ public class RouterTwo {
     private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
-        addRoute("/kaworu.gif",Method.GET,staticFileHandler::getFrontEndPage);
+        addRoute("/staticFile",Method.GET,staticFileHandler::getFrontEndPage);
     }
     public static void addRoute(String path, Method code, RouteHandler method) {
         Map<Method, RouteHandler> temp = new Hashtable<>();
@@ -29,6 +29,7 @@ public class RouterTwo {
     public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
         String path = request.getPath();
         Method code = request.getMethod();
+        path = getFile(path);
         System.out.println(path);
         System.out.println(code.name());
         System.out.println("Inside method??");
@@ -40,6 +41,17 @@ public class RouterTwo {
             System.out.println("Yea error....");
         }
         return HttpFormat.Response.SERVER_ERROR;
+    }
+    private static String getFile(String path){
+        String[] sections = path.split("/");
+        int index = sections.length-1;
+        if (index == -1){
+            return path;
+        }
+        if (sections[index].contains(".")){
+            return "/staticFile";
+        }
+        return path;
     }
     //TODO: Learn Interface indepth
     @FunctionalInterface

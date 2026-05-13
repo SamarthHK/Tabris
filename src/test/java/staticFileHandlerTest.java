@@ -27,8 +27,8 @@ public class staticFileHandlerTest {
             // req.printPacket();
             // System.out.write(staticFileHandler.getFrontEndPage(req).getResponse());
             // System.out.println();
-            RouterTwo.createResponse(req);
-            System.out.println("Sucsessfull???");
+            RouterTwo.createResponse(req).getResponse();
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }
