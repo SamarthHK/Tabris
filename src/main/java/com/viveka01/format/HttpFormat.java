@@ -91,7 +91,7 @@ public class HttpFormat {
             }
         }
         public void printRequestParams(){
-            System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d\n",method,path,version,host,content.getContentType(),contentLength);
+            System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,accessControlRequestMethod,accessControlRequestHeaders);
         }
         /**
          * @param read byte array of the request
@@ -131,7 +131,6 @@ public class HttpFormat {
          */
         private void getRequestLine(String line){
             String[] parts = line.split(" ");
-            System.out.println("Method before bug: "+parts[0]);
             method = Method.valueOf(parts[0]);
             path = parts[1];
             version = parts[2];
@@ -190,7 +189,7 @@ public class HttpFormat {
             return accessControlRequestMethod;
         }
         public String getRequestHeader(){
-            return accessControlRequestMethod;
+            return accessControlRequestHeaders;
         }
     }
 
@@ -290,6 +289,14 @@ public class HttpFormat {
                              "Access-Control-Allow-Headers: " + accessControlAllowHeaders + "\r\n" +
                              "\r\n";
             System.out.println(strHeader);
+            if (contentType == ContentType.PLAIN){
+                try {
+                    System.out.write(body);
+                    System.out.println();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             byte[] byteHeader = strHeader.getBytes(StandardCharsets.UTF_8);
             byte[] response = new byte[byteHeader.length + contentLength];
             System.arraycopy(byteHeader,0,response,0,byteHeader.length);

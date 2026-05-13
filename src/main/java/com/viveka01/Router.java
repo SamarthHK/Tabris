@@ -12,6 +12,7 @@ public class Router {
     private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
+        addRoute("/",Method.GET,StaticFileHandler::getFrontEndPage);
         addRoute("/staticFile",Method.GET,StaticFileHandler::getFrontEndPage);
         addRoute("/cors",Method.OPTIONS,CorsAccept::handleCors);
         addRoute("/upload", Method.POST, ImageReciever::storeImage);
@@ -28,7 +29,6 @@ public class Router {
         path = getCors(code, path);
         path = getFile(path);
         try {
-            System.out.println("Content: "+request.getContent());
             RouteHandler handler = route.get(path).get(code);
             return handler.handle(request);
         } catch (Exception e) {

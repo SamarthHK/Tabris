@@ -14,9 +14,13 @@ import com.viveka01.format.HttpFormat.Response;
 public class StaticFileHandler {
     private static final String frontEndDir = "src\\main\\resources\\static";
     private static final String fileNotFoundPath = "src\\main\\resources\\static\\fileNotFound.html";
+    private static final String homePage = "premain.html";
 
     public static HttpFormat.Response getFrontEndPage(HttpFormat.Request request){
         String path = request.getPath();
+        if (path.equals("/")){
+            path = homePage;
+        }
         String filePath;
         try{
             filePath = Paths.get(frontEndDir,path).toString();
