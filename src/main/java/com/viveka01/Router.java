@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import com.viveka01.format.*;
-import com.viveka01.logic.staticFileHandler;
+import com.viveka01.logic.*;
 
 
 public class Router {
     private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
-        addRoute("/staticFile",Method.GET,staticFileHandler::getFrontEndPage);
+        addRoute("/staticFile",Method.GET,StaticFileHandler::getFrontEndPage);
+        addRoute("/upload", Method.POST, ImageReciever::storeImage);
     }
     public static void addRoute(String path, Method code, RouteHandler method) {
         Map<Method, RouteHandler> temp = new Hashtable<>();

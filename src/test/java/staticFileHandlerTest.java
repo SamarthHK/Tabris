@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 import com.viveka01.Router;
 import com.viveka01.format.HttpFormat;
 import com.viveka01.format.Method;
-import com.viveka01.logic.staticFileHandler;
+import com.viveka01.logic.StaticFileHandler;
 
 public class staticFileHandlerTest {
     @Test

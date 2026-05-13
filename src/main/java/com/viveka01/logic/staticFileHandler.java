@@ -11,7 +11,7 @@ import com.viveka01.format.ContentType;
 import com.viveka01.format.HttpFormat;
 import com.viveka01.format.HttpFormat.Response;
 
-public class staticFileHandler {
+public class StaticFileHandler {
     private static final String frontEndDir = "src\\main\\resources\\static";
     private static final String fileNotFoundPath = "src\\main\\resources\\static\\fileNotFound.html";
 
@@ -39,7 +39,7 @@ public class staticFileHandler {
         }
     }
 
-    private static byte[] getFileBytes(String filePath) throws IOException {
+    public static byte[] getFileBytes(String filePath) throws IOException {
         File file = new File(filePath);
         FileInputStream readFile = new FileInputStream(file);
         byte[] body = new byte[readFile.available()];

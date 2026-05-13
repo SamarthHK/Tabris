@@ -164,6 +164,15 @@ public class HttpFormat {
         public Method getMethod(){
             return method;
         }
+        public byte[] getBody(){
+            return this.body;
+        }
+        public ContentType getContent(){
+            return content;
+        }
+        public String getHost(){
+            return host;
+        }
     }
 
 
@@ -225,6 +234,7 @@ public class HttpFormat {
                 case 500:
                     reasonPhrase = "Internal Server Error";
             }
+        
         }
         /**
          * @return gives whole byte array response

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashMap.*;
 
-import com.viveka01.RouterOld;
+import com.viveka01.Router;
 import com.viveka01.format.*;
 
 public class ImageReciever {
@@ -19,6 +19,10 @@ public class ImageReciever {
         imageCount.put(ContentType.JPEG,0);
         imageCount.put(ContentType.GIF,0);
         imageCount.put(ContentType.WEBP,0);
+    }
+    static public HttpFormat.Response storeImage(HttpFormat.Request request){
+        String outputPath = storeImage(request.getContent(),request.getBody());
+        return new HttpFormat.Response(200, request.getHost() + outputPath);
     }
 
     static public String storeImage(ContentType format,byte[] imageByte){
@@ -39,10 +43,22 @@ public class ImageReciever {
             e.printStackTrace();
         }
         String outputPath = "/"+getName(imgNumber,namingSize+1); 
-        RouterOld.addRoute(outputPath, Method.GET,path);
+        Router.addRoute(outputPath, Method.GET,ImageReciever::getImage);
         imgNumber++;
         return outputPath;
     }
+
+    public static HttpFormat.Response getImage(HttpFormat.Request request){
+        String path = request.getPath();
+        ContentType imgType = request.getContent();
+        byte [] image;
+        try {
+            image = StaticFileHandler.getFileBytes(path);
+        } catch (IOException e) {
+            return HttpFormat.Response.SERVER_ERROR;
+        }
+        return new HttpFormat.Response(200,imgType, image);
+    } 
 
     static private String getName(int number,int namingSize){
         String output = String.valueOf(number);
