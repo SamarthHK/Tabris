@@ -21,14 +21,18 @@ public class Router {
         route.put(path, temp);
     }
     public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
+        request.printRequestParams();
         String path = request.getPath();
         Method code = request.getMethod();
         path = getFile(path);
         try {
+            System.out.println("Content: "+request.getContent());
             RouteHandler handler = route.get(path).get(code);
             return handler.handle(request);
         } catch (Exception e) {
             System.out.println("Yea error....");
+            System.out.printf("path: %s,code: %s\n",path,code.toString());
+            e.printStackTrace();
         }
         return HttpFormat.Response.SERVER_ERROR;
     }

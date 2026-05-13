@@ -50,6 +50,7 @@ public enum ContentType{
         try{
             return ContentType.valueOf(vals[1]);
         }catch (IllegalArgumentException e){
+            System.out.println("Before unsupported called: "+ in);
             return ContentType.UNSUPORTED;
         }
         

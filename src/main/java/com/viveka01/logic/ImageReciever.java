@@ -26,6 +26,7 @@ public class ImageReciever {
     }
 
     static public String storeImage(ContentType format,byte[] imageByte){
+        System.out.println(format.toString());
         Integer imageNumber = imageCount.get(format);
         String name = getName(imageNumber)+"."+format.toString();
         String path = root+"\\"+name;

@@ -28,7 +28,7 @@ public class Main {
             HttpFormat.Request request;
             try {
                 request = new HttpFormat.Request(client.getInputStream());
-                HttpFormat.Response response = RouterOld.createResponse(request);
+                HttpFormat.Response response = Router.createResponse(request);
 
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
