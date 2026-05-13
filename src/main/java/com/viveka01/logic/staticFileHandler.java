@@ -15,21 +15,20 @@ public class staticFileHandler {
     private static final String frontEndDir = "src\\main\\resources\\static";
     private static final String fileNotFoundPath = "src\\main\\resources\\static\\fileNotFound.html";
 
-    public static HttpFormat.Response getFrontEndPage(HttpFormat.Request request) throws IOException, FileNotFoundException{
+    public static HttpFormat.Response getFrontEndPage(HttpFormat.Request request){
         String path = request.getPath();
         String filePath;
         try{
             filePath = Paths.get(frontEndDir,path).toString();
         }catch (InvalidPathException e){
-            return HttpFormat.Response.SERVER_ERROR;
+            filePath = fileNotFoundPath;
         }
 
         System.out.printf("Retrieving file: %s\n", filePath);
         File file = new File(filePath);
 
         if (!file.exists()) {
-            filePath = fileNotFoundPath;
-            file = new File(filePath);
+            return HttpFormat.Response.SERVER_ERROR;
         }
 
         String fileType = filePath.split("\\.")[1].toUpperCase();

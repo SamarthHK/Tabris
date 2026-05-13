@@ -142,7 +142,7 @@ public class HttpFormat {
 
             switch(parts[0]){
                 case "host":
-                    this.host = parts[1];
+                    this.host = parts[1].strip();
                     break;
                 case "content-type":
                     this.content = ContentType.stringToContentType(parts[1]);

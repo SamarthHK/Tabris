@@ -19,7 +19,7 @@ public class RouterTwo {
     private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
-        addRoute("/",Method.GET,staticFileHandler::getFrontEndPage);
+        addRoute("/kaworu.gif",Method.GET,staticFileHandler::getFrontEndPage);
     }
     public static void addRoute(String path, Method code, RouteHandler method) {
         Map<Method, RouteHandler> temp = new Hashtable<>();
@@ -29,8 +29,12 @@ public class RouterTwo {
     public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
         String path = request.getPath();
         Method code = request.getMethod();
+        System.out.println(path);
+        System.out.println(code.name());
+        System.out.println("Inside method??");
         try {
             RouteHandler handler = route.get(path).get(code);
+            System.out.println("Created handler?");
             return handler.handle(request);
         } catch (Exception e) {
             System.out.println("Yea error....");

@@ -24,9 +24,11 @@ public class staticFileHandlerTest {
         InputStream read = new ByteArrayInputStream(headerByte);
         try {
             HttpFormat.Request req = new HttpFormat.Request(read);
-            req.printPacket();
-            System.out.write(staticFileHandler.getFrontEndPage(req).getResponse());
-            System.out.println();
+            // req.printPacket();
+            // System.out.write(staticFileHandler.getFrontEndPage(req).getResponse());
+            // System.out.println();
+            RouterTwo.createResponse(req);
+            System.out.println("Sucsessfull???");
         } catch (IOException e) {
             e.printStackTrace();
         }
