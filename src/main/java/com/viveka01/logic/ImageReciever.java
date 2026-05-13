@@ -12,6 +12,7 @@ import com.viveka01.format.*;
 public class ImageReciever {
     static final String root = "src\\main\\java\\com\\viveka01\\database\\images";
     static HashMap<ContentType,Integer> imageCount = new HashMap<>();
+    static HashMap<String,String> codeToPath = new HashMap<>();
     static final int namingSize = 3;
     static int imgNumber = 0;
     static{
@@ -45,17 +46,25 @@ public class ImageReciever {
         }
         String outputPath = "/"+getName(imgNumber,namingSize+1); 
         Router.addRoute(outputPath, Method.GET,ImageReciever::getImage);
+        codeToPath.put(outputPath,path);
         imgNumber++;
         return outputPath;
     }
 
     public static HttpFormat.Response getImage(HttpFormat.Request request){
         String path = request.getPath();
-        ContentType imgType = request.getContent();
+        try{
+            path = codeToPath.get(path);
+        }catch (Exception e){
+            return HttpFormat.Response.SERVER_ERROR;
+        }
+        String temp = path.substring(path.lastIndexOf(".")+1);
+        ContentType imgType = ContentType.valueOf(temp);
         byte [] image;
         try {
             image = StaticFileHandler.getFileBytes(path);
         } catch (IOException e) {
+            System.out.println("Tried to acsess file: "+path);
             return HttpFormat.Response.SERVER_ERROR;
         }
         return new HttpFormat.Response(200,imgType, image);
