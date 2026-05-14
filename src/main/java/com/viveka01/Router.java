@@ -34,7 +34,6 @@ public class Router {
      * Meant for CORS response only, doesnt work with anything else (Or it wont work as intended)
      */
     public static Response createResponse(Request request) throws IOException {
-        request.printRequestParams();
         String path = request.getPath();
         Method code = request.getMethod();
         path = getCors(code, path);

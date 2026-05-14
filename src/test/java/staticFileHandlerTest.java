@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import static org.junit.Assert.*;
 
 import com.viveka01.Router;
-import com.viveka01.format.HttpFormat;
+import com.viveka01.format.*;
 import com.viveka01.format.Method;
 import com.viveka01.logic.StaticFileHandler;
 
@@ -23,7 +23,7 @@ public class staticFileHandlerTest {
         byte[] headerByte = header.getBytes();
         InputStream read = new ByteArrayInputStream(headerByte);
         try {
-            HttpFormat.Request req = new HttpFormat.Request(read);
+            Request req = new Request(read);
             // req.printPacket();
             // System.out.write(staticFileHandler.getFrontEndPage(req).getResponse());
             // System.out.println();

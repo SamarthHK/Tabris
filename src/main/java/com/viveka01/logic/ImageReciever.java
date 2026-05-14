@@ -8,7 +8,7 @@ import com.viveka01.Router;
 import com.viveka01.format.*;
 
 public class ImageReciever {
-    static final String root = "src\\main\\java\\com\\viveka01\\database\\images";
+    static final String root = "src\\main\\resources\\database\\images";
     static HashMap<ContentType,Integer> imageCount = new HashMap<>();
     static HashMap<String,String> codeToPath = new HashMap<>();
     static final int namingSize = 3;

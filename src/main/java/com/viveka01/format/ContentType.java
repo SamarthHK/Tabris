@@ -20,6 +20,7 @@ public enum ContentType{
     //Image
     PNG("image","png"),
     JPEG("image","jpeg"),
+    JPG("image","jpg"),
     GIF("image","gif"),
     WEBP("image","webp"),
     ICO("image","ico"),

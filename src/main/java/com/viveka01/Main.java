@@ -28,8 +28,8 @@ public class Main {
             Request request;
             try {
                 request = new Request(client.getInputStream());
+                request.printRequestParams();
                 Response response = Router.createResponse(request);
-
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());
                 sendResponse.flush();
