@@ -25,10 +25,10 @@ public class Main {
         while (true) {
             // opening connection to accept all responses
             final Socket client = server.accept();
-            HttpFormat.Request request;
+            Request request;
             try {
-                request = new HttpFormat.Request(client.getInputStream());
-                HttpFormat.Response response = Router.createResponse(request);
+                request = new Request(client.getInputStream());
+                Response response = Router.createResponse(request);
 
                 OutputStream sendResponse = client.getOutputStream();
                 sendResponse.write(response.getResponse());

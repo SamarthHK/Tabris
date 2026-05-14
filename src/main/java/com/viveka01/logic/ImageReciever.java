@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashMap.*;
-
 import com.viveka01.Router;
 import com.viveka01.format.*;
 
@@ -21,11 +19,17 @@ public class ImageReciever {
         imageCount.put(ContentType.GIF,0);
         imageCount.put(ContentType.WEBP,0);
     }
-    static public HttpFormat.Response storeImage(HttpFormat.Request request){
+    /**
+     * @param request request object containing CORS params and no body
+     */
+    static public Response storeImage(Request request){
         String outputPath = storeImage(request.getContent(),request.getBody());
-        return new HttpFormat.Response(200, request.getHost() + outputPath);
+        return new Response(200, request.getHost() + outputPath);
     }
-
+    /**
+     * @param format takes type of content in ContentType enum
+     * @param imageByte whole image that should be stored in byte array
+     */
     static public String storeImage(ContentType format,byte[] imageByte){
         System.out.println(format.toString());
         Integer imageNumber = imageCount.get(format);
@@ -50,13 +54,15 @@ public class ImageReciever {
         imgNumber++;
         return outputPath;
     }
-
-    public static HttpFormat.Response getImage(HttpFormat.Request request){
+    /**
+     * @param request request object containing url for code/ name of required file in db
+     */
+    public static Response getImage(Request request){
         String path = request.getPath();
         try{
             path = codeToPath.get(path);
         }catch (Exception e){
-            return HttpFormat.Response.SERVER_ERROR;
+            return Response.SERVER_ERROR;
         }
         String temp = path.substring(path.lastIndexOf(".")+1);
         ContentType imgType = ContentType.valueOf(temp);
@@ -65,9 +71,9 @@ public class ImageReciever {
             image = StaticFileHandler.getFileBytes(path);
         } catch (IOException e) {
             System.out.println("Tried to acsess file: "+path);
-            return HttpFormat.Response.SERVER_ERROR;
+            return Response.SERVER_ERROR;
         }
-        return new HttpFormat.Response(200,imgType, image);
+        return new Response(200,imgType, image);
     } 
 
     static private String getName(int number,int namingSize){

@@ -9,6 +9,8 @@ import com.viveka01.logic.*;
 
 
 public class Router {
+    //TODO: make it so paths can take in some sort of regex, create a class to read and parse the regex
+    //TODO: Make it so handler takes both URL and request so it can do its own parsing
     private static Map<String, Map<Method, RouteHandler>> route = new HashMap<>();
     private static final String frontEndDir = "src\\main\\resources\\static";
     static{
@@ -17,12 +19,21 @@ public class Router {
         addRoute("/cors",Method.OPTIONS,CorsAccept::handleCors);
         addRoute("/upload", Method.POST, ImageReciever::storeImage);
     }
+    /**
+     * @param path url of path
+     * @param code HTTP method
+     * @param method the method referenced that will be called. Request is passed into it
+     */
     public static void addRoute(String path, Method code, RouteHandler method) {
         Map<Method, RouteHandler> temp = new Hashtable<>();
         temp.put(code, method);
         route.put(path, temp);
     }
-    public static HttpFormat.Response createResponse(HttpFormat.Request request) throws IOException {
+    /**
+     * @param request takes request object (that contains CORS header values)
+     * Meant for CORS response only, doesnt work with anything else (Or it wont work as intended)
+     */
+    public static Response createResponse(Request request) throws IOException {
         request.printRequestParams();
         String path = request.getPath();
         Method code = request.getMethod();
@@ -36,7 +47,7 @@ public class Router {
             System.out.printf("path: %s,code: %s\n",path,code.toString());
             e.printStackTrace();
         }
-        return HttpFormat.Response.SERVER_ERROR;
+        return Response.SERVER_ERROR;
     }
     private static String getCors(Method method, String path){
         if (method == Method.OPTIONS){
@@ -44,6 +55,10 @@ public class Router {
         }
         return path;
     }
+    /**
+     * @param path url in string form
+     * returning /staticFile route or the path itself
+     */
     private static String getFile(String path){
         String[] sections = path.split("/");
         int index = sections.length-1;
@@ -58,6 +73,6 @@ public class Router {
     //TODO: Learn Interface indepth
     @FunctionalInterface
     public interface RouteHandler{
-        HttpFormat.Response handle(HttpFormat.Request request) throws Exception;
+        Response handle(Request request) throws Exception;
     }
 }
