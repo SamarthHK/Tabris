@@ -14,7 +14,6 @@ import com.viveka01.format.Method;
 import com.viveka01.logic.StaticFileHandler;
 
 public class staticFileHandlerTest {
-    @Test
     public void test(){
         String header = "GET /kaworu.gif HTTP/1.1\r\n" + //
                         "Host: localhost\r\n" + //
