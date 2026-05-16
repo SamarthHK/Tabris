@@ -66,6 +66,15 @@ public class RouterMap {
         return node;
     } 
     
+    static private Id checkDynamicId(String segment){
+        Id type;
+        try{
+            type = Id.valueOf(segment);
+        }catch (Exception e){
+            type = Id.INVALID;
+        }
+        return type;
+    }
 }
     
 
