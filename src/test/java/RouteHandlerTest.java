@@ -8,6 +8,11 @@ import com.viveka01.logic.StaticFileHandler;
 public class RouteHandlerTest {
     @Test
     public void testRouter(){
+        try{
+            Class.forName("com.viveka01.router.DefaultRouterMap");        
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
         RouteHandler test = StaticFileHandler::getFrontEndPage;
         Method method = Method.GET;
         String path = "/homePage/user/samarth";
@@ -17,8 +22,6 @@ public class RouteHandlerTest {
         }
         else{
             System.out.println("Both are not same");
-        }
-
-        
+        } 
     }
 }
