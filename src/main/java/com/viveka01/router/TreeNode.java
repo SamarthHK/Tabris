@@ -42,6 +42,17 @@ public class TreeNode{
     public TreeNode getChild(String key){
         return children.get(key);
     }
+    /**
+     * @param key 
+     */
+    public boolean containsChild(String key){
+        return children.containsKey(key);
+    }
+    public void printAllKeys(){
+        for ( String key : children.keySet() ) {
+            System.out.println( key );
+        }
+    }
 
 
 }

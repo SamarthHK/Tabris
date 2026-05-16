@@ -13,21 +13,22 @@ public class StaticFileHandler {
     private static final String frontEndDir = "src\\main\\resources\\static";
     private static final String fileNotFoundPath = "src\\main\\resources\\static\\fileNotFound.html";
     private static final String homePage = "premain.html";
+
     /**
      * @param request request object containing URL to page required
-     * if page isnt found then fileNotFound returned
-     * If any server error happens the server error response is given
-     * else actuall file is sent over
+     *                if page isnt found then fileNotFound returned
+     *                If any server error happens the server error response is given
+     *                else actuall file is sent over
      */
-    public static Response getFrontEndPage(Request request){
+    public static Response getFrontEndPage(Request request) {
         String path = request.getPath();
-        if (path.equals("/")){
+        if (path.equals("/")) {
             path = homePage;
         }
         String filePath;
-        try{
-            filePath = Paths.get(frontEndDir,path).toString();
-        }catch (InvalidPathException e){
+        try {
+            filePath = Paths.get(frontEndDir, path).toString();
+        } catch (InvalidPathException e) {
             filePath = fileNotFoundPath;
         }
 
@@ -45,9 +46,10 @@ public class StaticFileHandler {
             return Response.SERVER_ERROR;
         }
     }
+
     /**
      * @param filePath path to file in String
-     * returns byte array of file specified
+     *                 returns byte array of file specified
      */
     public static byte[] getFileBytes(String filePath) throws IOException {
         File file = new File(filePath);
