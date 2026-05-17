@@ -3,10 +3,11 @@ package com.viveka01.router;
 import com.viveka01.format.ContentType;
 
 public enum Id {
+    //DO NOT REPEAT CODE EVERY, CODE MUST BE UNIQUE
     FILE("{f}"),
     INT("{i}"),
-    STRING("{s}"),
-    INVALID("{*}");
+    STRING("{*}"),
+    INVALID("{!}");
 
     public final String code;
 
@@ -36,11 +37,9 @@ public enum Id {
      */
     static public boolean isSupportedFile(String fileName){
         if (!fileName.contains(".")){
-            System.out.println("missing .");
             return false;
         }
         String ending = fileName.substring(fileName.lastIndexOf(".")+1);
-        System.out.printf("Ending: %s\n",ending);
         for(ContentType type: ContentType.values()){
             if (type.getMediaType() == "EMPTY"){
                 continue;
@@ -50,5 +49,18 @@ public enum Id {
             }
         }
         return false;
+    }
+    /**
+     * @param code takes string
+     * expects {f} {i} or {*}, if its none of those INVALID is returned
+     * @return returns FILE, INT, or STRING if matched else will return INVALID
+     */
+    static public Id getIdFromCode(String code){
+        for(Id id:Id.values()){
+            if(code.equals(id.code)){
+                return id;
+            }
+        }
+        return Id.INVALID;
     }
 }

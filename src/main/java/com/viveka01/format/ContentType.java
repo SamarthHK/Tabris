@@ -30,7 +30,7 @@ public enum ContentType{
     MPEG("video","mpeg"),
     MP4("video","mp4"),
     WEBM("video","webm");
-
+    
     public final String mediaType;
     public final String mediaFormat;
 

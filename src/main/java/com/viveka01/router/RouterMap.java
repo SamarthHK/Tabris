@@ -1,17 +1,21 @@
 package com.viveka01.router;
 
 import com.viveka01.format.*;
+import com.viveka01.logic.ServerError;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RouterMap {
+    static TreeNode SERVER_ERROR = new TreeNode("SERVER_ERROR");
 
     private static Map<Method,TreeNode> roots = new ConcurrentHashMap<>();
     static{
-            for(Method key : Method.values()){
-                roots.put(key,new TreeNode(""));
-            }
+        SERVER_ERROR.setHandle(ServerError::serverError);
+        for(Method key : Method.values()){
+            roots.put(key,new TreeNode(""));
         }
+    }
     /**
      * @param method HTTP method
      * @param route route in /foo/bar format
@@ -27,8 +31,13 @@ public class RouterMap {
      * @return returns the handle at the end of the tree, returns NULL
      */
     static public RouteHandler getHandle(Method method, String route){
-        TreeNode node = traverseTree(method, route);
-        return node.getHandle();
+        TreeNode node;
+        try{
+            node = traverseTree(method, route);
+            return node.getHandle();
+        }catch (Exception e){
+            return SERVER_ERROR.getHandle();
+        }
     }
     /**
      * @return returns handle coresponsing to path and code, else will return SERVER_ERROR and print debug
@@ -53,28 +62,23 @@ public class RouterMap {
      * @return returns node thats ends in same place as route given
      * @throws NullPointerException throws this when Node cannot be found, acount for it by sending server error response
      */
-    static private TreeNode traverseTree(Method method, String route) throws NullPointerException{
-        System.out.println("DebugStatements:");
+    static private TreeNode traverseTree(Method method, String route){
         String[] routeSegments = route.split("/");
         TreeNode node = roots.get(method);
+        String compare;
+
         for(String segment: routeSegments){
-            if (!node.containsChild(segment)){
+            compare = segment;
+            if (Id.getType(compare) != Id.STRING){
+                compare = Id.getType(compare).code;
+            }            
+            if (!node.containsChild(compare)){
                 node.addChild(new TreeNode(segment));
             }
-            node = node.getChild(segment);
+            node = node.getChild(compare);
         }
         return node;
     } 
-    
-    static private Id checkDynamicId(String segment){
-        Id type;
-        try{
-            type = Id.valueOf(segment);
-        }catch (Exception e){
-            type = Id.INVALID;
-        }
-        return type;
-    }
 }
     
 
