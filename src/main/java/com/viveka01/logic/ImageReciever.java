@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import com.viveka01.Router;
 import com.viveka01.format.*;
 
 public class ImageReciever {
@@ -49,7 +48,6 @@ public class ImageReciever {
             e.printStackTrace();
         }
         String outputPath = "/"+getName(imgNumber,namingSize+1); 
-        Router.addRoute(outputPath, Method.GET,ImageReciever::getImage);
         codeToPath.put(outputPath,path);
         imgNumber++;
         return outputPath;

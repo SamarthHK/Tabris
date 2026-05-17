@@ -1,14 +1,18 @@
 package com.viveka01.router;
 
 import com.viveka01.format.Method;
+import com.viveka01.logic.CorsAccept;
+import com.viveka01.logic.ImageReciever;
 import com.viveka01.logic.StaticFileHandler;
 
 public class DefaultRouterMap {
     static String routerName = "com.viveka01.router.RouterMap";
     static{
-        System.out.println("Creating Initializing Router");
+        System.out.println("Initializing Router");
         try {
             System.out.printf("Called static block of %s\n",Class.forName(routerName));
+            addRoutes();
+            System.out.println("Added routes");
         } catch (ClassNotFoundException e) {
             System.out.printf("Failed to call static block of %s\n",routerName);
             e.printStackTrace();
@@ -17,5 +21,8 @@ public class DefaultRouterMap {
     private static void addRoutes(){
         RouterMap.addRoute(Method.GET, "/",StaticFileHandler::getFrontEndPage);
         RouterMap.addRoute(Method.GET, "/{f}",StaticFileHandler::getFrontEndPage);
+        RouterMap.addRoute(Method.GET, "/{i}",ImageReciever::getImage);
+        RouterMap.addRoute(Method.POST, "/upload", ImageReciever::storeImage);
+        RouterMap.addRoute(Method.OPTIONS, "/upload",CorsAccept::handleCors);
     }
 }

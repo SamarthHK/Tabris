@@ -65,13 +65,13 @@ public class RouterMap {
     static private TreeNode traverseTree(Method method, String route){
         String[] routeSegments = route.split("/");
         TreeNode node = roots.get(method);
-        String compare;
+        String compare = "";
 
         for(String segment: routeSegments){
             compare = segment;
             if (Id.getType(compare) != Id.STRING){
                 compare = Id.getType(compare).code;
-            }            
+            }
             if (!node.containsChild(compare)){
                 node.addChild(new TreeNode(segment));
             }

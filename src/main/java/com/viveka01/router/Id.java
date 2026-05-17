@@ -44,7 +44,7 @@ public enum Id {
             if (type.getMediaType() == "EMPTY"){
                 continue;
             }
-            if (ending.equals(type.toString().toLowerCase())){
+            if (ending.equals(type.mediaFormat)){
                 return true;
             }
         }

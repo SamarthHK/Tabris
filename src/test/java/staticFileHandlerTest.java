@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 
 import static org.junit.Assert.*;
 
-import com.viveka01.Router;
 import com.viveka01.format.*;
 import com.viveka01.format.Method;
 import com.viveka01.logic.StaticFileHandler;
@@ -26,7 +25,7 @@ public class staticFileHandlerTest {
             // req.printPacket();
             // System.out.write(staticFileHandler.getFrontEndPage(req).getResponse());
             // System.out.println();
-            Router.createResponse(req).getResponse();
+            // RouterOld.createResponse(req).getResponse();
             System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
