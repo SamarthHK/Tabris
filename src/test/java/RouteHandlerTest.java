@@ -2,11 +2,11 @@ import com.viveka01.router.RouterMap;
 
 import org.junit.Test;
 
-import com.viveka01.router.RouteHandler;
+import com.viveka01.router.*;
 import com.viveka01.format.Method;
 import com.viveka01.logic.StaticFileHandler;
 public class RouteHandlerTest {
-    @Test
+    
     public void testRouter(){
         try{
             Class.forName("com.viveka01.router.DefaultRouterMap");        
@@ -23,5 +23,9 @@ public class RouteHandlerTest {
         else{
             System.out.println("Both are not same");
         } 
+    }
+    @Test
+    public void testId(){
+        System.out.println(Id.getType("hello.png").toString());
     }
 }

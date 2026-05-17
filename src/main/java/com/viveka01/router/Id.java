@@ -17,7 +17,7 @@ public enum Id {
      * @param segment takes in string of url segment
      * @return returns FILE, INT, or STRING enum
      */
-    public Id getType(String segment){
+    static public Id getType(String segment){
         if (Id.isSupportedFile(segment)){
             return Id.FILE;
         }
@@ -36,10 +36,11 @@ public enum Id {
      */
     static public boolean isSupportedFile(String fileName){
         if (!fileName.contains(".")){
+            System.out.println("missing .");
             return false;
         }
-        String ending = fileName.substring(fileName.lastIndexOf("."));
-
+        String ending = fileName.substring(fileName.lastIndexOf(".")+1);
+        System.out.printf("Ending: %s\n",ending);
         for(ContentType type: ContentType.values()){
             if (type.getMediaType() == "EMPTY"){
                 continue;
