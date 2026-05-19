@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import javax.swing.text.AbstractDocument.Content;
+
 public class Request {
     byte[] packet;
     byte[] header;
@@ -20,6 +22,7 @@ public class Request {
     String origin;
     String accessControlRequestMethod;
     String accessControlRequestHeaders;
+    String boundary;
     //Header Checks
     int amountRead = 0;
     int lineBreakPos = 0;
@@ -84,7 +87,7 @@ public class Request {
         }
     }
     public void printRequestParams(){
-        System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,accessControlRequestMethod,accessControlRequestHeaders);
+        System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);
     }
     /**
      * @param read byte array of the request
@@ -128,11 +131,21 @@ public class Request {
         path = parts[1];
         version = parts[2];
     }
+    //TODO: Get rid of this later on.... Meant for testing only
+    private Request(){
+        System.out.println("Private initializer");
+    }
+
+    static public Request testRequest(){
+        System.out.println("Created dummy request object for testing!!!");
+        return new Request();
+    }
+    //TODO:TESTING getHeaders, TURN TO private void after done
     /**
      * @param line single line from http request in string format
      * Assigns host, content, and contentLenght values from line
      */
-    private void getHeaders(String line){
+    public void getHeaders(String line){
         String[] parts = line.split(":",2);
         parts[0] = parts[0].trim().toLowerCase();
         switch(parts[0]){
@@ -140,7 +153,15 @@ public class Request {
                 this.host = parts[1].strip();
                 break;
             case "content-type":
-                this.content = ContentType.stringToContentType(parts[1]);
+                String contentType = parts[1].split(";")[0].strip().toLowerCase();
+                this.content = ContentType.stringToContentType(contentType);
+                System.out.println("Content type is:"+content.toString());
+                if (content == ContentType.FORM){
+                    String boundary = parts[1];
+                    boundary = boundary.substring(boundary.lastIndexOf("=")+1);
+                    this.boundary = boundary;
+                }
+                System.out.printf("The content type is: %s, and the boundary is: %s\n",content.toString(),boundary);
                 break;
             case "content-length":
                 this.contentLength = Integer.parseInt(parts[1].strip());

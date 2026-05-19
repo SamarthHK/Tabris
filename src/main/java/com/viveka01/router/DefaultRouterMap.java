@@ -21,6 +21,7 @@ public class DefaultRouterMap {
     private static void addRoutes(){
         RouterMap.addRoute(Method.GET, "/",StaticFileHandler::getFrontEndPage);
         RouterMap.addRoute(Method.GET, "/{f}",StaticFileHandler::getFrontEndPage);
+        RouterMap.addRoute(Method.GET, "/getStaticFile/{f}",StaticFileHandler::getFrontEndPage);
         RouterMap.addRoute(Method.GET, "/{i}",ImageReciever::getImage);
         RouterMap.addRoute(Method.POST, "/upload", ImageReciever::storeImage);
         RouterMap.addRoute(Method.OPTIONS, "/upload",CorsAccept::handleCors);

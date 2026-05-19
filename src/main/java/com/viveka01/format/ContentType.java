@@ -29,7 +29,10 @@ public enum ContentType{
     //Video
     MPEG("video","mpeg"),
     MP4("video","mp4"),
-    WEBM("video","webm");
+    WEBM("video","webm"),
+    
+    //Multipart
+    FORM("multipart","form-data");
     
     public final String mediaType;
     public final String mediaFormat;
@@ -51,7 +54,7 @@ public enum ContentType{
     static public ContentType stringToContentType(String in){
         String[] vals = in.strip().toUpperCase().split("/");
         try{
-            return ContentType.valueOf(vals[1]);
+            return ContentType.valueOf(vals[1].split("-")[0]);
         }catch (IllegalArgumentException e){
             System.out.println("Before unsupported called: "+ in);
             return ContentType.UNSUPORTED;
