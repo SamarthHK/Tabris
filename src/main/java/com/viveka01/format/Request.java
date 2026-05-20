@@ -1,6 +1,8 @@
 package com.viveka01.format;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -68,6 +70,10 @@ public class Request {
         this.packet = buffer.toByteArray();
         this.body = new byte[contentLength];
         System.arraycopy(this.packet, lineBreakPos+4, this.body, 0,contentLength);
+
+        if (content == ContentType.FORM){
+            writePacketToFile("src\\test\\java\\testPacket");
+        }
     }
     //TODO: delete printing methods when done with testing
     //Created for testing will remove later
@@ -85,6 +91,16 @@ public class Request {
             System.out.println("COULDNT PRINT");
             e.printStackTrace();
         }
+    }
+    private void writePacketToFile(String filePath) throws IOException{
+        File file = new File(filePath+"\\debug.raw");
+        if (file.exists()){
+            file.delete();
+        }
+        file.createNewFile();
+        FileOutputStream write = new FileOutputStream(file);
+        write.write(packet);
+        System.out.printf("Wrote %s packet to %s\n",content.toString(),filePath+"debug.raw");
     }
     public void printRequestParams(){
         System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);

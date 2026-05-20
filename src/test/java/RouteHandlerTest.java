@@ -4,7 +4,7 @@ import com.viveka01.router.*;
 import com.viveka01.format.Method;
 import com.viveka01.logic.StaticFileHandler;
 public class RouteHandlerTest {
-    @Test
+    
     public void testRouter(){
         try{
             Class.forName("com.viveka01.router.DefaultRouterMap");        

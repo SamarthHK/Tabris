@@ -50,7 +50,7 @@ public class RouterMap {
             return handler.handle(request);
         } catch (Exception e) {
             System.out.println("Yea error....");
-            System.out.printf("path: %s,code: %s\n",path,code.toString());
+            System.out.printf("path: %s ,code: %s\n",path,code.toString());
             e.printStackTrace();
         }
         return Response.SERVER_ERROR;
