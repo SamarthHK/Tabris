@@ -21,21 +21,27 @@ public class Element {
         dispositionLine = splitLines[0].split(";");
 
         for(String part:dispositionLine){
-            System.out.printf("Part: %s",part);
-            part = part.toLowerCase().strip();
-            if (part.startsWith("content-disposition")){
+            String compare = part.toLowerCase().strip();
+            System.out.printf("Part: %s\n",compare);
+
+            if (compare.startsWith("content-disposition")){
                 contentDisposition = part.substring(part.lastIndexOf(":")+1).strip();
             }
-            else if (part.startsWith("name")){
-                contentDisposition = part.substring(part.lastIndexOf("=")+1).strip();
+            else if (compare.startsWith("name")){
+                name = part.substring(part.lastIndexOf("=")+1)
+                           .replace("\""," ")
+                           .strip();
             }
-            else if (part.startsWith("filename")){
-                contentDisposition = part.substring(part.lastIndexOf("=")+1).strip();
+            else if (compare.startsWith("filename")){
+                fileName = part.substring(part.lastIndexOf("=")+1)
+                               .replace("\""," ")
+                               .strip();
             }
         }
+        System.out.println();
 
-        if(splitLines.length != 1){
-            contentLine = splitLines[0];
+        if(splitLines.length >= 2){
+            contentLine = splitLines[1];
             this.content = ContentType.stringToContentType(
                 contentLine.substring(contentLine.lastIndexOf(":")+1)
                 .strip()); 
