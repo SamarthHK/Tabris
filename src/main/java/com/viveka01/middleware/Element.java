@@ -1,6 +1,8 @@
 package com.viveka01.middleware;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +13,29 @@ public class Element {
     String name;
     String fileName;
     ContentType content = ContentType.PLAIN;
+    int crlfPos;
+    byte[] body;
 
+    //TODO: When making full parsing, check if you include CRLF and boundary or you remove both or you keep CRLF only, important so body doesnt contain it
+    /**
+     * @param element byte array containing ONLY one element of the webform, element shouldnt contain ending CRLF or boundy, only headers, double CRLF and boundary
+     * @exception Error throws a error message when there is not double CRLF detected, needs it to seperate body and headers
+     */
     public Element(byte[] element){
+        crlfPos = checkDoubleLineBreak(element);
+        if (crlfPos == -1){
+            throw new Error("WHERE IS THE FRIGGAN DOUBLE CRLF CHUD???");
+        }    
+        byte[] header = Arrays.copyOf(element, crlfPos);
+        System.out.println("Full Header: ");
+        try {
+            System.out.write(header);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\n");
+        body = Arrays.copyOfRange(element, crlfPos+4, element.length);
+        readHeader(new String(header,StandardCharsets.UTF_8));
         
     }
 
@@ -55,8 +78,48 @@ public class Element {
         }
     }
 
+    /**
+     * @param read byte array of the request
+     * @return returns position of CRLF, else returns -1
+     */
+    private int checkLineBreak(byte[] read) {
+        for (int i = 0; i <= read.length - 2; i++) {
+            if (read[i] == 0x0D &&  // /r
+                read[i + 1] == 0x0A)// /n
+                {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @param read byte array of the request
+     * @return returns position of double CRLF, else returns -1
+     */
+    private int checkDoubleLineBreak(byte[] read) {
+        for (int i = 0; i <= read.length - 4; i++) {
+            if (read[i] == 0x0D &&    // \r
+                read[i + 1] == 0x0A &&// \n
+                read[i + 2] == 0x0D &&// \r
+                read[i + 3] == 0x0A) {// \n
+
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void printAllValues(){
         System.out.printf("Content-Disposition: %s\nName: %s\nFile Name: %s\nContent-Type: %s\n",contentDisposition,name,fileName,content);
+    }
+
+    public byte[] getBody(){
+        return body;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 
 }

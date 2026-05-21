@@ -75,12 +75,14 @@ public class Request {
             writePacketToFile("src\\test\\java\\testPacket");
         }
     }
+
     //TODO: delete printing methods when done with testing
     //Created for testing will remove later
     public void printPacket(){
         printRequestParams();
         printBody();
     }
+
     public void printBody(){
         try{
             System.out.println("Body:");
@@ -92,6 +94,7 @@ public class Request {
             e.printStackTrace();
         }
     }
+
     private void writePacketToFile(String filePath) throws IOException{
         File file = new File(filePath+"\\debug.raw");
         if (file.exists()){
@@ -102,9 +105,11 @@ public class Request {
         write.write(packet);
         System.out.printf("Wrote %s packet to %s\n",content.toString(),filePath+"debug.raw");
     }
+
     public void printRequestParams(){
         System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);
     }
+
     /**
      * @param read byte array of the request
      * @return returns position of lineBreak, else returns -1
@@ -121,6 +126,7 @@ public class Request {
         }
         return -1;
     }
+
     /**
      * @param lines takes string array of http request seperated by \r\n
      */
@@ -130,6 +136,7 @@ public class Request {
             getHeaders(lines[i]);
         }
     }
+
     /**
      * @param roughBody Takes a byte[] that contains a header and potentially some body
      * parseHeader parses the header part of input and puts the header values in variables (of whatever is supported)
@@ -138,6 +145,7 @@ public class Request {
         String[] header = new String(roughBody,StandardCharsets.UTF_8).substring(0, lineBreakPos).split("\r\n");
         parseHeader(header);
     }
+
     /**
      * @param line takes string input of the line and gets method, path and http version of client
      */
@@ -147,6 +155,7 @@ public class Request {
         path = parts[1];
         version = parts[2];
     }
+
     //TODO: Get rid of this later on.... Meant for testing only
     private Request(){
         System.out.println("Private initializer");
@@ -164,13 +173,16 @@ public class Request {
     public void getHeaders(String line){
         String[] parts = line.split(":",2);
         parts[0] = parts[0].trim().toLowerCase();
+
         switch(parts[0]){
             case "host":
                 this.host = parts[1].strip();
                 break;
+
             case "content-type":
                 String contentType = parts[1].split(";")[0].strip().toLowerCase();
                 this.content = ContentType.stringToContentType(contentType);
+                
                 System.out.println("Content type is:"+content.toString());
                 if (content == ContentType.FORM){
                     String boundary = parts[1];
@@ -179,15 +191,19 @@ public class Request {
                 }
                 System.out.printf("The content type is: %s, and the boundary is: %s\n",content.toString(),boundary);
                 break;
+
             case "content-length":
                 this.contentLength = Integer.parseInt(parts[1].strip());
                 break;
+
             case "origin":
                 this.origin = parts[1].strip();
                 break;
+
             case "access-control-request-method":
                 this.accessControlRequestMethod = parts[1].strip();
                 break;
+
             case "access-control-request-headers":
                 this.accessControlRequestHeaders = parts[1].strip();
                 break;
