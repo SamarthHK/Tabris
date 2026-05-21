@@ -12,9 +12,16 @@ public class Element {
     String fileName;
     ContentType content = ContentType.PLAIN;
 
-    public Element(byte[] header){
-        String stringHeader = new String(header,StandardCharsets.UTF_8);
-        String[] splitLines = stringHeader.split("\\r\\n");
+    public Element(byte[] element){
+        
+    }
+
+    /**
+     * @param header String containing the header lines of the element, no body (can parse even with body)
+     * Takes String of header and stores in contentDispotion, name, fileName, and content variables 
+     */
+    public void readHeader(String header){
+        String[] splitLines = header.split("\\r\\n");
         String[] dispositionLine;
         String contentLine;
 
