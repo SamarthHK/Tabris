@@ -7,6 +7,9 @@ import java.io.IOException;
 
 import com.viveka01.format.*;
 import com.viveka01.logic.*;
+
+import org.codehaus.plexus.util.FileUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MainTest {
@@ -31,5 +34,11 @@ public class MainTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        File controlImage = new File("src\\test\\java\\testimage\\controll.jpg");
+        try {
+            Assert.assertTrue(FileUtils.contentEquals(testImage, controlImage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
 }
