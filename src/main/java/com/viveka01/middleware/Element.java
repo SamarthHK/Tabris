@@ -27,13 +27,13 @@ public class Element {
             throw new Error("WHERE IS THE FRIGGAN DOUBLE CRLF CHUD???");
         }    
         byte[] header = Arrays.copyOf(element, crlfPos);
-        System.out.println("Full Header: ");
-        try {
-            System.out.write(header);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("\n");
+        // System.out.println("Full Header: ");
+        // try {
+        //     System.out.write(header);
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+        // System.out.println("\n");
         body = Arrays.copyOfRange(element, crlfPos+4, element.length);
         readHeader(new String(header,StandardCharsets.UTF_8));
         
@@ -44,12 +44,11 @@ public class Element {
      * Takes String of header and stores in contentDispotion, name, fileName, and content variables 
      */
     public void readHeader(String header){
-        String[] splitLines = header.split("\\r\\n");
+        String[] splitLines = header.split("\r\n");
         String[] dispositionLine;
         String contentLine;
 
         dispositionLine = splitLines[0].split(";");
-
         for(String part:dispositionLine){
             String compare = part.toLowerCase().strip();
             // System.out.printf("Part: %s\n",compare);
@@ -71,7 +70,7 @@ public class Element {
         System.out.println();
 
         if(splitLines.length >= 2){
-            contentLine = splitLines[1];
+            contentLine = splitLines[splitLines.length-1];
             this.content = ContentType.stringToContentType(
                 contentLine.substring(contentLine.lastIndexOf(":")+1)
                 .strip()); 
