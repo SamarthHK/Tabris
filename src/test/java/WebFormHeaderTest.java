@@ -52,7 +52,7 @@ public class WebFormHeaderTest {
     public void testDetectSubArrayIndex(){
         final String packet = "src\\test\\java\\testPacket\\debug.raw";
         final String body = "src\\test\\java\\testPacket\\element1.raw";
-        final String boundary = "----WebKitFormBoundaryeeg2XBlrfU8uwkMt";
+        final String boundary = "----WebKitFormBoundarybBce1CgXAUwK2vz1";
 
         File packetFile = new File(packet);
         File bodyFile = new File(body);
@@ -68,7 +68,9 @@ public class WebFormHeaderTest {
             e.printStackTrace();
             return;
         }
+        
         WebFormParser webFormParser = new WebFormParser(boundary, packetByte);
         webFormParser.detectSubArrayIndex(packetByte, boundary.getBytes(StandardCharsets.UTF_8));
+        System.out.println(boundary.length());
     }
 }

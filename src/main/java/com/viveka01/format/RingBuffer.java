@@ -75,6 +75,7 @@ public class RingBuffer {
     //     for (int i = 0; i < length; i++) {
     //         buffer[writePosition] = data[i];
     //         writePosition = (writePosition + 1) % capacity;
+    
 
     //         if (size < capacity) {
     //             size++;
