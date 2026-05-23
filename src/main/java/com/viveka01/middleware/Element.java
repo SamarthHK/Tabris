@@ -52,7 +52,7 @@ public class Element {
 
         for(String part:dispositionLine){
             String compare = part.toLowerCase().strip();
-            System.out.printf("Part: %s\n",compare);
+            // System.out.printf("Part: %s\n",compare);
 
             if (compare.startsWith("content-disposition")){
                 contentDisposition = part.substring(part.lastIndexOf(":")+1).strip();
@@ -121,5 +121,4 @@ public class Element {
     public String getFileName(){
         return fileName;
     }
-
 }

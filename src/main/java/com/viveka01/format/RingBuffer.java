@@ -22,28 +22,25 @@ public class RingBuffer {
     /**
      * @param data byte array of what should be added
      */
-    public void addData(byte[] data) {
-        for (byte b : data) {
-            buffer[writePosition] = b;
-            writePosition = (writePosition + 1) % capacity;
-            if (size < capacity) {
-                size++;
-            }
-            globalPosition++;
+    public void addData(byte[] data){
+        for (byte b: data){
+            addByte(b);
         }
     }
 
     public void addData(byte[] data, int length) {
         for (int i = 0; i < length; i++) {
-            buffer[writePosition] = data[i];
-            writePosition = (writePosition + 1) % capacity;
-
-            if (size < capacity) {
-                size++;
-            }
-
-            globalPosition++;
+            addByte(data[i]);
         }
+    }
+
+    public void addByte(byte data){
+        buffer[writePosition] = data;
+        writePosition = (writePosition + 1) % capacity;
+        if (size < capacity) {
+            size++;
+        }
+        globalPosition++;
     }
 
     /**
@@ -62,4 +59,28 @@ public class RingBuffer {
     public int getGlobal(){
         return globalPosition - size;
     }
+
+    // public void addData(byte[] data) {
+    //     for (byte b : data) {
+    //         buffer[writePosition] = b;
+    //         writePosition = (writePosition + 1) % capacity;
+    //         if (size < capacity) {
+    //             size++;
+    //         }
+    //         globalPosition++;
+    //     }
+    // }
+
+    // public void addData(byte[] data, int length) {
+    //     for (int i = 0; i < length; i++) {
+    //         buffer[writePosition] = data[i];
+    //         writePosition = (writePosition + 1) % capacity;
+
+    //         if (size < capacity) {
+    //             size++;
+    //         }
+
+    //         globalPosition++;
+    //     }
+    // }
 }
