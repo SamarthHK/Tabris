@@ -239,6 +239,9 @@ public class Request {
     public String getBoundary(){
         return boundary;
     }
+    public ArrayList<Element> getElements(){
+        return elements;
+    }
     
     //Setters
     public void setElements(ArrayList<Element> elements){

@@ -1,77 +1,82 @@
 package com.viveka01.logic;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Random;
 
-import com.viveka01.format.ContentDisposition;
 import com.viveka01.format.ContentType;
 import com.viveka01.format.Request;
 import com.viveka01.format.Response;
 import com.viveka01.middleware.Element;
-//TODO: Create single and bulk handling to store files
+
 public class ImageRecieverTwo {
     static final String[] winRoot = "src\\main\\resources\\database\\images".split("\\\\");
     static String sysRoot; 
     static HashMap<Integer,String> nameToNumber = new HashMap<>();
-    static final int namingSize = 3;
-    static final AtomicInteger imgNumber = new AtomicInteger(getInitNumber());
+    static final Random random = new Random();
+    static final int idSize = 10;
+    static final String extension = ".raw";
     static{
         Path path = Paths.get(winRoot[0],Arrays.copyOfRange(winRoot, 1, winRoot.length));
         sysRoot = path.toString();
         System.out.println(sysRoot);
     }
-    // static public Response storeImage(Request request){
+    static public Response storeImage(Request request){
+        if (request.getContent() == ContentType.FORM){
+            String[] files = bulkFileHandle(request.getElements());
+        }
+        else
+        {
+            String file = singleFileHandle(extension, null)
+        }
+    }
 
-    // }
-
-    static public void singleFileHandle(String fileName,byte[] body){
-        String storeName = getName(imgNumber.addAndGet(1), namingSize);
+    static public String singleFileHandle(String fileName,byte[] body){
+        byte[] code = new byte[idSize];
+        random.nextBytes(code);
+        String storeName = Base64.getUrlEncoder().withoutPadding().encodeToString(code)+extension;
         Path path = Paths.get(sysRoot,storeName);
-        
-        // Response response = new Response(200, "Dihh");
-        // response.setContentDisposition(ContentDisposition.INLINE, fileName);
-        // return response;
-    }
 
-    static private void bulkFileHandle(ArrayList<Element> element){
-        
-    }
+        byte[] fileNameByte = fileName.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer buffer = ByteBuffer.allocate(4 + fileNameByte.length + body.length);
 
-    static private int getInitNumber(){
-        File dir = new File(sysRoot);
-        File[] files = dir.listFiles();
-        int biggestNum = 0;
-        for (File file: files){
-            String fileName = file.getName();
-            System.out.println(fileName);
-            int num = 0;
-            try{
-                fileName = fileName.substring(0, fileName.lastIndexOf("."));
-                num = Integer.valueOf(fileName);
-            }catch (Exception e){
-                num = 0;
-            }
-            if (biggestNum < num){
-                biggestNum = num;
-            }
+        buffer.putInt(fileNameByte.length);
+        buffer.put(fileNameByte);
+        buffer.put(body);
+
+        byte[] formatBody = buffer.array();
+        try {
+            System.out.write(formatBody);
+            System.out.println();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return biggestNum;
+        File file = new File(path.toString());
+        try(FileOutputStream write = new FileOutputStream(file)){
+            write.write(formatBody);
+            System.out.println("Saved file!!!");
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return storeName;
     }
 
-    static private String getName(int number,int namingSize){
-        String output = String.valueOf(number);
-        String space = "";
-        for(int i = namingSize; i != 0;i--){
-            if (i == output.length()){
-                return space + output;
-            }
-            space += "0";
+    static private String[] bulkFileHandle(ArrayList<Element> elements){
+        ArrayList<String> files = new ArrayList<>();
+        for(Element element: elements){
+            if(element.getFileName() == null) continue;
+            files.add(singleFileHandle(element.getFileName(),element.getBody()));
         }
-        return output;
+        return (String[]) files.toArray();
     }
 }
