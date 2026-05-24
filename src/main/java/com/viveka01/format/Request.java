@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import javax.swing.text.AbstractDocument.Content;
+
+import com.viveka01.middleware.Element;
 
 public class Request {
     byte[] packet;
@@ -30,6 +33,8 @@ public class Request {
     int lineBreakPos = 0;
     //Constants
     final int BUFFER_SIZE = 1024; 
+    //Custom formats:
+    ArrayList<Element> elements = new ArrayList<>();
     /**
      * @param in socket InputStream
      * Takes whole InputStream and parse the http request
@@ -230,5 +235,16 @@ public class Request {
     }
     public String getRequestHeader(){
         return accessControlRequestHeaders;
+    }
+    public String getBoundary(){
+        return boundary;
+    }
+    
+    //Setters
+    public void setElements(ArrayList<Element> elements){
+        this.elements = elements;
+    }
+    public void addElement(Element element){
+        elements.add(element);
     }
 }

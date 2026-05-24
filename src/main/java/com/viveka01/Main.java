@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.viveka01.format.*;
+import com.viveka01.middleware.HandleMiddleware;
 import com.viveka01.router.*;
 public class Main {
 
@@ -33,6 +34,7 @@ public class Main {
             Request request;
             try {
                 request = new Request(client.getInputStream());
+                request = HandleMiddleware.MiddleWareRoute(request);
                 request.printRequestParams();
                 Response response = RouterMap.createResponse(request);
                 OutputStream sendResponse = client.getOutputStream();

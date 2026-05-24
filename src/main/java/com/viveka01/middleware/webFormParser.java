@@ -39,6 +39,12 @@ public class WebFormParser {
      * @param subArray boundary in byte array
      */
     public ArrayList<int[]> detectSubArrayIndex(byte[] array, byte[] subArray){
+        try {
+            System.out.write(subArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
         RingBuffer buffer = new RingBuffer(subArray.length);
         ArrayList<int[]> indexPos = new ArrayList<>();
         for(int i = 0; i != array.length; i++){
