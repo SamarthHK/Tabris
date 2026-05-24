@@ -21,6 +21,8 @@ public class Response {
     String origin = "*";
     String accessControlAllowMethod = "OPTIONS";
     String accessControlAllowHeaders = "Content-Type";
+    String contentDisposition;
+    String fileName;
     //Body
     byte[] body;
     /**
@@ -84,6 +86,12 @@ public class Response {
         }
     
     }
+
+    public void setContentDisposition(ContentDisposition contentDisposition, String fileName){
+        this.contentDisposition = contentDisposition.toString().toLowerCase();
+        this.fileName = "\"" + fileName + "\"";
+    }
+
     /**
      * @return gives whole byte array response
      */
@@ -99,6 +107,7 @@ public class Response {
                             "Access-Control-Allow-Origin: " + origin + "\r\n" +
                             "Access-Control-Allow-Methods: " + accessControlAllowMethod + "\r\n" +
                             "Access-Control-Allow-Headers: " + accessControlAllowHeaders + "\r\n" +
+                            "Content-Disposition: " + contentDisposition + "; filename=" + fileName + "\r\n" + 
                             "\r\n";
         System.out.println(strHeader);
         if (contentType == ContentType.PLAIN){
