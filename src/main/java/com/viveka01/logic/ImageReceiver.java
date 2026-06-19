@@ -10,18 +10,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class ImageRecieverTwo {
+public class ImageReceiver {
     static final String root = FilePathHandler.getAbsolutePath("src|main|resources|database|images");
-    static HashMap<String,String> idToExtension = new HashMap<>();
+    static ConcurrentHashMap<String,String> idToExtension = new ConcurrentHashMap<>();
     static final int namingSize = 12;
     static{
         loadImages();
+        System.out.println("Loaded all images into hashmap");
     }
 
+    /**
+     * Loads all images from root directory of images into hashmap
+     */
     static private void loadImages(){
         File folder = new File(root);
         File[] files = folder.listFiles();
+        if (files == null) return;
         for (File file: files){
            String fileName = file.getName();
            String id = fileName.substring(0,fileName.indexOf("."));
@@ -30,6 +36,7 @@ public class ImageRecieverTwo {
            idToExtension.put(id,ext);
         }
     }
+
     /**
      * @param request request object containing CORS params and no body
      */
@@ -72,7 +79,7 @@ public class ImageRecieverTwo {
     /**
      * @param request request object containing url for code/ name of required file in db
      */
-    public static Response getImage(Request request){
+    static public Response getImage(Request request){
         System.out.println("Retrieving a image");
         String path = request.getPath();
         String id = path.substring(path.lastIndexOf("/")).replace("/","");

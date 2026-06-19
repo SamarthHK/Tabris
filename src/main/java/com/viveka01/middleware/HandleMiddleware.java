@@ -7,6 +7,8 @@ import com.viveka01.format.Request;
 
 public class HandleMiddleware{
     public static Request MiddleWareRoute(Request request){
+        request.setBlock(!Cors.corsInspect(request.getOrigin(),request.getHost()));
+        if (request.isBlocked()) return request;
         ContentType content = request.getContent();
         switch(content){
             case FORM:

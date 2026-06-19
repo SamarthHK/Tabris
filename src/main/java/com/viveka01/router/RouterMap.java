@@ -41,7 +41,7 @@ public class RouterMap {
         }
     }
     /**
-     * @return returns handle coresponsing to path and code, else will return SERVER_ERROR and print debug
+     * @return returns handle corresponding to path and code, else will return SERVER_ERROR and print debug
      */
     public static Response createResponse(Request request){
         String path = request.getPath();
@@ -61,8 +61,7 @@ public class RouterMap {
     /**
      * @param method HTTP Method
      * @param route route in format of /foo/bar
-     * @return returns node thats ends in same place as route given
-     * @throws NullPointerException throws this when Node cannot be found, acount for it by sending server error response
+     * @return returns node that's ends in same place as route given
      */
     static private TreeNode addNode(Method method, String route){
         String[] routeSegments = route.split("/");
@@ -83,6 +82,13 @@ public class RouterMap {
         return node;
     }
 
+    /**
+     *
+     * @param method The http method used to access the site, DELETE, GET, PUT, HEAD
+     * @param route Request route, example /upload or /viewImage/...
+     * @return a TreeNode object that contains the handler/ endpoint
+     * @throws NullPointerException When node is not found with current path
+     */
     static private TreeNode readTree(Method method,String route) throws NullPointerException{
         String[] routeSegments = route.split("/");
         TreeNode node = roots.get(method);

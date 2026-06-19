@@ -35,6 +35,8 @@ public class Request {
     final int BUFFER_SIZE = 1024; 
     //Custom formats:
     ArrayList<Element> elements = new ArrayList<>();
+    //Check to allow packet to continue down chain
+    private Boolean blocked = false;
     /**
      * @param in socket InputStream
      * Takes whole InputStream and parse the http request
@@ -112,7 +114,7 @@ public class Request {
     }
 
     public void printRequestParams(){
-        System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);
+        System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Origin: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,origin,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);
     }
 
     /**
@@ -242,6 +244,8 @@ public class Request {
     public ArrayList<Element> getElements(){
         return elements;
     }
+    public Boolean isBlocked(){return blocked; }
+    public String getOrigin(){return origin;}
     
     //Setters
     public void setElements(ArrayList<Element> elements){
@@ -250,4 +254,5 @@ public class Request {
     public void addElement(Element element){
         elements.add(element);
     }
+    public void setBlock(Boolean block){blocked = block;}
 }
