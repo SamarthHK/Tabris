@@ -1,6 +1,5 @@
 package com.viveka01.router;
 
-import com.viveka01.core.HttpWorkerThread;
 import com.viveka01.format.*;
 import com.viveka01.logic.ServerError;
 import org.slf4j.Logger;

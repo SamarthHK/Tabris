@@ -1,17 +1,13 @@
 package com.viveka01.core;
 
-import com.viveka01.Main;
-import com.viveka01.format.Request;
-import com.viveka01.format.Response;
-import com.viveka01.middleware.HandleMiddleware;
-import com.viveka01.router.RouterMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerListener extends Thread{
     static final Logger LOGGER = LoggerFactory.getLogger(ServerListener.class);
@@ -19,6 +15,10 @@ public class ServerListener extends Thread{
     private int port;
     ServerSocket server;
     private int count = 1;
+    private final int POOLSIZE = 1;
+    ExecutorService pool = Executors.newFixedThreadPool(POOLSIZE);
+    volatile Boolean run = true;
+
     /**
      * @param port port the server is listening on
      * @throws IOException when server cannot be started on specified port
@@ -33,15 +33,22 @@ public class ServerListener extends Thread{
     public void run(){
         LOGGER.info("Listening on port: {}....",port);
         // opening connection
-        while (true) {
+        while (run) {
             // opening connection to accept all responses
             try {
                 final Socket client = server.accept();
-                HttpWorkerThread worker = new HttpWorkerThread(client, count++);
-                worker.start();
+                Runnable httpTask = new HttpWorkerInstruction(client, count++);
+                pool.submit(httpTask);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Error accepting client request",e);
             }
         }
+        try {
+            server.close();
+        } catch (IOException e) {
+            LOGGER.error("Error closing server",e);
+        }
+        pool.shutdown();
+        LOGGER.info("Closed thread pools and server");
     }
 }

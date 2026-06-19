@@ -1,6 +1,5 @@
 package com.viveka01.core;
 
-import com.viveka01.Main;
 import com.viveka01.format.Request;
 import com.viveka01.format.Response;
 import com.viveka01.middleware.HandleMiddleware;
@@ -12,11 +11,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class HttpWorkerThread extends Thread{
-    static final Logger LOGGER = LoggerFactory.getLogger(HttpWorkerThread.class);
+public class HttpWorkerInstruction implements Runnable{
+    static final Logger LOGGER = LoggerFactory.getLogger(HttpWorkerInstruction.class);
     Socket client;
     int id;
-    public HttpWorkerThread(Socket client, int id){
+    public HttpWorkerInstruction(Socket client, int id){
         this.client = client;
         this.id = id;
         LOGGER.info("Created instance of worker: {}",id);
