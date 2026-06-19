@@ -36,6 +36,7 @@ public class Response {
         this.contentLength = body.length;
         this.connection = ConnectionCodes.CLOSE;
         this.body = body;
+        this.contentDisposition = "inline";
 
         switch(statusCode){
             case 200:
@@ -97,7 +98,6 @@ public class Response {
      */
     public byte[] getResponse(){
         this.date = ZonedDateTime.now(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME);
-
         String strHeader = "HTTP/" + VERSION + " " + statusCode + " " + reasonPhrase + "\r\n" +
                             "Content-Type: " + contentType.getContentType() + "\r\n" + 
                             "Content-Length: " + contentLength + "\r\n" + 

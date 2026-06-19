@@ -7,7 +7,7 @@ import java.util.HashMap;
 import com.viveka01.format.*;
 
 public class ImageReciever {
-    static final String root = "src\\main\\resources\\database\\images";
+    static final String root = FilePathHandler.getAbsolutePath("src|main|resources|database|images");
     static HashMap<ContentType,Integer> imageCount = new HashMap<>();
     static HashMap<String,String> codeToPath = new HashMap<>();
     static final int namingSize = 3;
@@ -47,8 +47,7 @@ public class ImageReciever {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String outputPath = "/"+getName(imgNumber,namingSize+1); 
-        codeToPath.put(outputPath,path);
+        String outputPath = "/"+getName(imgNumber,namingSize+1);
         imgNumber++;
         return outputPath;
     }
@@ -60,6 +59,7 @@ public class ImageReciever {
         try{
             path = codeToPath.get(path);
         }catch (Exception e){
+            System.out.println("Could not find path of file");
             return Response.SERVER_ERROR;
         }
         String temp = path.substring(path.lastIndexOf(".")+1);

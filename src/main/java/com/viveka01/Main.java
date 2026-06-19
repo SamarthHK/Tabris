@@ -7,9 +7,8 @@ import com.viveka01.format.*;
 import com.viveka01.middleware.HandleMiddleware;
 import com.viveka01.router.*;
 public class Main {
-
     public static void main(String args[]) throws IOException {
-        final int port = 80;
+        final int port = 8080;
         ServerSocket server;
         try {
             server = new ServerSocket(port);

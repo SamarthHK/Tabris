@@ -10,10 +10,10 @@ import com.viveka01.format.ContentType;
 import com.viveka01.format.*;
 
 public class StaticFileHandler {
-    private static final String frontEndDir = "src\\main\\resources\\static";
-    private static final String fileNotFoundPath = "src\\main\\resources\\static\\fileNotFound.html";
+    private static final String frontEndDir = FilePathHandler.getAbsolutePath("src|main|resources|static");
+    private static final String fileNotFoundPath = FilePathHandler.getAbsolutePath("src|main|resources|static|fileNotFound.html");
     private static final String homePage = "premain.html";
-
+    private static final String favicon = "kaoru.png";
     /**
      * @param request request object containing URL to page required
      *                if page isnt found then fileNotFound returned
@@ -24,6 +24,9 @@ public class StaticFileHandler {
         String path = request.getPath();
         if (path.equals("/")) {
             path = homePage;
+        }
+        if (path.equals("/favicon.ico")){
+            path = favicon;
         }
         String filePath;
         try {
@@ -36,13 +39,16 @@ public class StaticFileHandler {
         File file = new File(filePath);
 
         if (!file.exists()) {
+            System.out.println("File doesnt exist");
             return Response.SERVER_ERROR;
         }
 
         String fileType = filePath.split("\\.")[1].toUpperCase();
         try {
-            return new Response(200, ContentType.valueOf(fileType), getFileBytes(filePath));
+            Response response = new Response(200, ContentType.valueOf(fileType), getFileBytes(filePath));
+            return response;
         } catch (IOException e) {
+            System.out.println("Failed to get bytes of file, path: "+filePath);
             return Response.SERVER_ERROR;
         }
     }

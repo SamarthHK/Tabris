@@ -22,7 +22,7 @@ public class RouterMap {
      * @param handle the method
      */
     static public void addRoute(Method method, String route,RouteHandler handle){
-        TreeNode node = traverseTree(method, route);
+        TreeNode node = addNode(method, route);
         node.setHandle(handle);
     }
     /**
@@ -33,9 +33,10 @@ public class RouterMap {
     static public RouteHandler getHandle(Method method, String route){
         TreeNode node;
         try{
-            node = traverseTree(method, route);
+            node = readTree(method, route);
             return node.getHandle();
-        }catch (Exception e){
+        }catch (NullPointerException e){
+            System.out.println("Error finding a node");
             return SERVER_ERROR.getHandle();
         }
     }
@@ -47,10 +48,11 @@ public class RouterMap {
         Method code = request.getMethod();
         try {
             RouteHandler handler = getHandle(code, path);
+            System.out.println("Got handle");
             return handler.handle(request);
         } catch (Exception e) {
-            System.out.println("Yea error....");
-            System.out.printf("path: %s ,code: %s\n",path,code.toString());
+            System.out.println("Error with handling");
+            System.out.printf("path: %s, code: %s\n",path,code.toString());
             e.printStackTrace();
         }
         return Response.SERVER_ERROR;
@@ -62,23 +64,49 @@ public class RouterMap {
      * @return returns node thats ends in same place as route given
      * @throws NullPointerException throws this when Node cannot be found, acount for it by sending server error response
      */
-    static private TreeNode traverseTree(Method method, String route){
+    static private TreeNode addNode(Method method, String route){
         String[] routeSegments = route.split("/");
         TreeNode node = roots.get(method);
         String compare = "";
 
         for(String segment: routeSegments){
+            if (segment.isEmpty()) continue;
             compare = segment;
             if (Id.getType(compare) != Id.STRING){
                 compare = Id.getType(compare).code;
             }
             if (!node.containsChild(compare)){
+                System.out.println("Created a new branch:"+segment);
+                System.out.println("code: "+Id.getType(compare).toString());
                 node.addChild(new TreeNode(segment));
             }
             node = node.getChild(compare);
         }
         return node;
-    } 
+    }
+
+    static private TreeNode readTree(Method method,String route) throws NullPointerException{
+        String[] routeSegments = route.split("/");
+        TreeNode node = roots.get(method);
+        String compare = "";
+
+        for(String segment: routeSegments){
+            if (segment.isEmpty()) continue;
+            Id segmentType = Id.getType(segment);
+
+            if (node.containsChild(segment)){
+                node = node.getChild(segment);
+                continue;
+            }
+            if (node.containsChild(segmentType.code)){
+                node = node.getChild(segmentType.code);
+                continue;
+            }
+            System.out.println(segment+" "+segmentType.toString());
+            throw new NullPointerException("Node not found");
+        }
+        return node;
+    }
 }
     
 

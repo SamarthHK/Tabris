@@ -3,7 +3,7 @@ package com.viveka01.router;
 import com.viveka01.format.ContentType;
 
 public enum Id {
-    //DO NOT REPEAT CODE EVERY, CODE MUST BE UNIQUE
+    //DO NOT REPEAT CODE EVER, CODE MUST BE UNIQUE
     FILE("{f}"),
     INT("{i}"),
     STRING("{*}"),
@@ -31,7 +31,7 @@ public enum Id {
     }
 
     /**
-     * @param takes string of file name or anything
+     * @param fileName string of file name or anything
      * compares ending of file to all existing (supported) file endings
      * @return returns true of false
      */
@@ -58,6 +58,7 @@ public enum Id {
     static public Id getIdFromCode(String code){
         for(Id id:Id.values()){
             if(code.equals(id.code)){
+                System.out.println(id.toString());
                 return id;
             }
         }
