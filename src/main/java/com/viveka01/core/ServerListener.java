@@ -13,7 +13,7 @@ import java.net.Socket;
 public class ServerListener extends Thread{
     private int port;
     ServerSocket server;
-
+    private int count = 0;
     /**
      * @param port port the server is listening on
      * @throws IOException when server cannot be started on specified port
@@ -32,19 +32,8 @@ public class ServerListener extends Thread{
             // opening connection to accept all responses
             try {
                 final Socket client = server.accept();
-                Request request;
-                request = new Request(client.getInputStream());
-                request = HandleMiddleware.MiddleWareRoute(request);
-                request.printRequestParams();
-                if (request.isBlocked()){
-                    System.out.println("Blocked user from domain: "+request.getOrigin());
-                    continue;
-                }
-                Response response = RouterMap.createResponse(request);
-                OutputStream sendResponse = client.getOutputStream();
-                sendResponse.write(response.getResponse());
-                sendResponse.flush();
-                sendResponse.close();
+                HttpWorkerThread worker = new HttpWorkerThread(client, count++);
+                worker.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

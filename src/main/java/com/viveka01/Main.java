@@ -12,22 +12,20 @@ public class Main {
     static final int port = 8080;
     public static void main(String args[]) {
         ServerListener serverListener;
-        ServerListener temp;
         try{
             serverListener = new ServerListener(8080);
-            temp = new ServerListener(9090);
         }catch (IOException e){
             e.printStackTrace();
             return;
         }
         try {
             Class.forName("com.viveka01.router.DefaultRouterMap");
+            Class.forName("com.viveka01.logic.ImageReceiver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
         serverListener.start();
-        temp.start();
 
     }
 }
