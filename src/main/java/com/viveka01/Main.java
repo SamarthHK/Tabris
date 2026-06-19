@@ -23,6 +23,7 @@ public class Main {
         System.out.println(result);
         try {
             Class.forName("com.viveka01.router.DefaultRouterMap");
+            Class.forName("com.viveka01.logic.ImageRecieverTwo");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } 

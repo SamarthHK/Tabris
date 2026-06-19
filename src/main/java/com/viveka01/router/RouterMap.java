@@ -76,8 +76,6 @@ public class RouterMap {
                 compare = Id.getType(compare).code;
             }
             if (!node.containsChild(compare)){
-                System.out.println("Created a new branch:"+segment);
-                System.out.println("code: "+Id.getType(compare).toString());
                 node.addChild(new TreeNode(segment));
             }
             node = node.getChild(compare);

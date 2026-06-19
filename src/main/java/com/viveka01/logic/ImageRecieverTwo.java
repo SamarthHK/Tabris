@@ -15,7 +15,21 @@ public class ImageRecieverTwo {
     static final String root = FilePathHandler.getAbsolutePath("src|main|resources|database|images");
     static HashMap<String,String> idToExtension = new HashMap<>();
     static final int namingSize = 12;
+    static{
+        loadImages();
+    }
 
+    static private void loadImages(){
+        File folder = new File(root);
+        File[] files = folder.listFiles();
+        for (File file: files){
+           String fileName = file.getName();
+           String id = fileName.substring(0,fileName.indexOf("."));
+           String ext = fileName.substring(fileName.indexOf(".")+1);
+           System.out.println("loaded: "+id+" "+ext);
+           idToExtension.put(id,ext);
+        }
+    }
     /**
      * @param request request object containing CORS params and no body
      */
@@ -61,8 +75,10 @@ public class ImageRecieverTwo {
     public static Response getImage(Request request){
         System.out.println("Retrieving a image");
         String path = request.getPath();
-        String id = path.substring(path.lastIndexOf("/")+1,path.length());
+        String id = path.substring(path.lastIndexOf("/")).replace("/","");
+        System.out.println(id);
         String ext = idToExtension.get(id);
+        System.out.println(ext);
         ContentType imgType = ContentType.valueOf(ext);
         path = root + "|" + id + "." + ext;
         path = FilePathHandler.getAbsolutePath(path);
