@@ -1,32 +1,36 @@
 package com.viveka01.core;
 
+import com.viveka01.Main;
 import com.viveka01.format.Request;
 import com.viveka01.format.Response;
 import com.viveka01.middleware.HandleMiddleware;
 import com.viveka01.router.RouterMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
 public class HttpWorkerThread extends Thread{
+    static final Logger LOGGER = LoggerFactory.getLogger(HttpWorkerThread.class);
     Socket client;
     int id;
     public HttpWorkerThread(Socket client, int id){
         this.client = client;
         this.id = id;
-        System.out.printf("Created instance of worker: %d\n",id);
+        LOGGER.info("Created instance of worker: {}",id);
     }
 
     @Override
     public void run(){
-        System.out.printf("Worker: %d",id);
+        LOGGER.info("Worker: {} running",id);
         try{
             Request request = new Request(client.getInputStream());
             request = HandleMiddleware.MiddleWareRoute(request);
-            request.printRequestParams();
+            LOGGER.info("Accepted a request: {}",request.getRequestParams());
             if (request.isBlocked()){
-                System.out.printf("Worker %d blocked user from domain: %s\n",id,request.getOrigin());
+                LOGGER.info("Worker {} blocked user accessing from domain: {}",id,request.getOrigin());
                 return;
             }
             Response response = RouterMap.createResponse(request);
@@ -34,14 +38,9 @@ public class HttpWorkerThread extends Thread{
             sendResponse.write(response.getResponse());
             sendResponse.flush();
             sendResponse.close();
-            System.out.printf("Thread %d completed task without fail\n",id);
+            LOGGER.info("Thread {} completed task without fail",id);
         }catch (IOException e) {
-            System.out.printf("Thread: %d hit exception\n",id);
-        }
-        try {
-            sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Thread: {} hit exception",id,e);
         }
     }
 }

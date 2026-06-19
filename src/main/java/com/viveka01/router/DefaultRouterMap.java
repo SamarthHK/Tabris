@@ -1,22 +1,25 @@
 package com.viveka01.router;
 
+import com.viveka01.Main;
 import com.viveka01.format.Method;
 import com.viveka01.logic.CorsAccept;
 import com.viveka01.logic.ImageReceiver;
 import com.viveka01.logic.ImageReceiver;
 import com.viveka01.logic.StaticFileHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultRouterMap {
+    static final Logger LOGGER = LoggerFactory.getLogger(DefaultRouterMap.class);
     static String routerName = "com.viveka01.router.RouterMap";
     static{
         System.out.println("Initializing Router");
         try {
-            System.out.printf("Called static block of %s\n",Class.forName(routerName));
+            LOGGER.info("Called static block of {}",Class.forName(routerName));
             addRoutes();
-            System.out.println("Added routes");
+            LOGGER.info("Added routes");
         } catch (ClassNotFoundException e) {
-            System.out.printf("Failed to call static block of %s\n",routerName);
-            e.printStackTrace();
+            LOGGER.error("Failed to call static block of {}",routerName,e);
         }
     }
     private static void addRoutes(){

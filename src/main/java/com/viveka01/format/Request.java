@@ -83,26 +83,14 @@ public class Request {
         }
     }
 
-    //TODO: delete printing methods when done with testing
+    //TODO: delete getting methods when done with testing
     //Created for testing will remove later
-    public void printPacket(){
-        printRequestParams();
-        printBody();
+    public String getPacket(){
+        return getRequestParams() + new String(getBody(),StandardCharsets.UTF_8);
     }
 
-    public void printBody(){
-        try{
-            System.out.println("Body:");
-            System.out.write(this.body);
-            System.out.println();
-        }
-        catch (IOException e){
-            System.out.println("COULDNT PRINT");
-            e.printStackTrace();
-        }
-    }
 
-    private void writePacketToFile(String filePath) throws IOException{
+    private String writePacketToFile(String filePath) throws IOException{
         File file = new File(filePath+"\\debug.raw");
         if (file.exists()){
             file.delete();
@@ -110,11 +98,23 @@ public class Request {
         file.createNewFile();
         FileOutputStream write = new FileOutputStream(file);
         write.write(packet);
-        System.out.printf("Wrote %s packet to %s\n",content.toString(),filePath+"debug.raw");
+        return String.format("Wrote %s packet to %s\n",content.toString(),filePath+"debug.raw");
     }
 
-    public void printRequestParams(){
-        System.out.printf("Method: %s, Path: %s, Version: %s \nHost: %s, Origin: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s\n",method,path,version,host,origin,content.getContentType(),contentLength,boundary,accessControlRequestMethod,accessControlRequestHeaders);
+    public String getRequestParams(){
+        return String.format(
+                "Method: %s, Path: %s, Version: %s\n" + "Host: %s, Origin: %s, Content-Type: %s, Content-Length: %d, boundary: %s, Request-Method: %s, Request-Header: %s",
+                method,
+                path,
+                version,
+                host,
+                origin,
+                content.getContentType(),
+                contentLength,
+                boundary,
+                accessControlRequestMethod,
+                accessControlRequestHeaders
+        );
     }
 
     /**
@@ -175,7 +175,7 @@ public class Request {
     //TODO:TESTING getHeaders, TURN TO private void after done
     /**
      * @param line single line from http request in string format
-     * Assigns host, content, and contentLenght values from line
+     * Assigns host, content, and content Length values from line
      */
     public void getHeaders(String line){
         String[] parts = line.split(":",2);
@@ -189,14 +189,12 @@ public class Request {
             case "content-type":
                 String contentType = parts[1].split(";")[0].strip().toLowerCase();
                 this.content = ContentType.stringToContentType(contentType);
-                
-                System.out.println("Content type is:"+content.toString());
-                if (content == ContentType.FORM){
+
+                if (content == ContentType.FORM) {
                     String boundary = parts[1];
-                    boundary = boundary.substring(boundary.lastIndexOf("=")+1);
+                    boundary = boundary.substring(boundary.lastIndexOf("=") + 1);
                     this.boundary = boundary;
                 }
-                System.out.printf("The content type is: %s, and the boundary is: %s\n",content.toString(),boundary);
                 break;
 
             case "content-length":

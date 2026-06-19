@@ -38,12 +38,6 @@ public class WebFormParser {
      * @param subArray boundary in byte array
      */
     public ArrayList<int[]> detectSubArrayIndex(byte[] array, byte[] subArray){
-        try {
-            System.out.write(subArray);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println();
         RingBuffer buffer = new RingBuffer(subArray.length);
         ArrayList<int[]> indexPos = new ArrayList<>();
         for(int i = 0; i != array.length; i++){
@@ -51,8 +45,6 @@ public class WebFormParser {
 
             if (Arrays.equals(buffer.toArray(),subArray)){
                 indexPos.add(new int[]{i-subArray.length+1,i});
-                // int[] temp = indexPos.get(indexPos.size()-1);
-                // System.out.printf("Boundary starts at: %d and ends at %d\n",temp[0],temp[1]);
             }
         }
         return indexPos;

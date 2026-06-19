@@ -1,12 +1,16 @@
 package com.viveka01.router;
 
+import com.viveka01.core.HttpWorkerThread;
 import com.viveka01.format.*;
 import com.viveka01.logic.ServerError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RouterMap {
+    static final Logger LOGGER = LoggerFactory.getLogger(RouterMap.class);
     static TreeNode SERVER_ERROR = new TreeNode("SERVER_ERROR");
 
     private static Map<Method,TreeNode> roots = new ConcurrentHashMap<>();
@@ -36,7 +40,7 @@ public class RouterMap {
             node = readTree(method, route);
             return node.getHandle();
         }catch (NullPointerException e){
-            System.out.println("Error finding a node");
+            LOGGER.info("Error finding a node");
             return SERVER_ERROR.getHandle();
         }
     }
@@ -48,12 +52,11 @@ public class RouterMap {
         Method code = request.getMethod();
         try {
             RouteHandler handler = getHandle(code, path);
-            System.out.println("Got handle");
+            LOGGER.info("Got handle");
             return handler.handle(request);
         } catch (Exception e) {
-            System.out.println("Error with handling");
-            System.out.printf("path: %s, code: %s\n",path,code.toString());
-            e.printStackTrace();
+            LOGGER.error("Error with handling");
+            LOGGER.error("path: {}, code: {}",path,code.toString(),e);
         }
         return Response.SERVER_ERROR;
     }
@@ -106,7 +109,7 @@ public class RouterMap {
                 node = node.getChild(segmentType.code);
                 continue;
             }
-            System.out.println(segment+" "+segmentType.toString());
+            LOGGER.error("Could not find node {} {}",method,route);
             throw new NullPointerException("Node not found");
         }
         return node;

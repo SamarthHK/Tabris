@@ -109,15 +109,6 @@ public class Response {
                             "Access-Control-Allow-Headers: " + accessControlAllowHeaders + "\r\n" +
                             "Content-Disposition: " + contentDisposition + "; filename=" + fileName + "\r\n" + 
                             "\r\n";
-        System.out.println(strHeader);
-        if (contentType == ContentType.PLAIN){
-            try {
-                System.out.write(body);
-                System.out.println();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         byte[] byteHeader = strHeader.getBytes(StandardCharsets.UTF_8);
         byte[] response = new byte[byteHeader.length + contentLength];
         System.arraycopy(byteHeader,0,response,0,byteHeader.length);

@@ -1,9 +1,12 @@
 package com.viveka01.logic;
 
+import com.viveka01.Main;
 import com.viveka01.format.ContentType;
 import com.viveka01.format.FilePathHandler;
 import com.viveka01.format.Request;
 import com.viveka01.format.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,12 +16,14 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageReceiver {
+    static final Logger LOGGER = LoggerFactory.getLogger(ImageReceiver.class);
+
     static final String root = FilePathHandler.getAbsolutePath("src|main|resources|database|images");
     static ConcurrentHashMap<String,String> idToExtension = new ConcurrentHashMap<>();
     static final int namingSize = 12;
     static{
         loadImages();
-        System.out.println("Loaded all images into hashmap");
+        LOGGER.info("Loaded all images into hashmap");
     }
 
     /**
@@ -32,7 +37,7 @@ public class ImageReceiver {
            String fileName = file.getName();
            String id = fileName.substring(0,fileName.indexOf("."));
            String ext = fileName.substring(fileName.indexOf(".")+1);
-           System.out.println("loaded: "+id+" "+ext);
+           LOGGER.info("loaded: {} {}",id,ext);
            idToExtension.put(id,ext);
         }
     }
@@ -50,7 +55,6 @@ public class ImageReceiver {
      * @param imageByte whole image that should be stored in byte array
      */
     static public String storeImage(ContentType format, byte[] imageByte){
-        System.out.println(format.toString());
         File image;
         String name;
         String path;
@@ -67,12 +71,11 @@ public class ImageReceiver {
             out.write(imageByte);
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Caught an exception creating files in storeImage",e);
         }
         String outputPath = "/viewImage/"+id;
-        System.out.println("added: "+id+" "+format.toString());
+        LOGGER.info("added: {} {}",id,format.toString());
         idToExtension.put(id,format.toString());
-        System.out.println(idToExtension.get(id));
         return outputPath;
     }
 
@@ -80,12 +83,10 @@ public class ImageReceiver {
      * @param request request object containing url for code/ name of required file in db
      */
     static public Response getImage(Request request){
-        System.out.println("Retrieving a image");
         String path = request.getPath();
+        LOGGER.info("Retriving image: {}",path);
         String id = path.substring(path.lastIndexOf("/")).replace("/","");
-        System.out.println(id);
         String ext = idToExtension.get(id);
-        System.out.println(ext);
         ContentType imgType = ContentType.valueOf(ext);
         path = root + "|" + id + "." + ext;
         path = FilePathHandler.getAbsolutePath(path);
@@ -93,7 +94,7 @@ public class ImageReceiver {
         try {
             image = StaticFileHandler.getFileBytes(path);
         } catch (IOException e) {
-            System.out.println("Tried to acsess file: "+path);
+            LOGGER.error("Tried to acsess file: {}",path,e);
             return Response.SERVER_ERROR;
         }
         return new Response(200,imgType, image);
