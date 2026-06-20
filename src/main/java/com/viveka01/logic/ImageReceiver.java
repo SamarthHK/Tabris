@@ -1,6 +1,7 @@
 package com.viveka01.logic;
 
 import com.viveka01.Main;
+import com.viveka01.config.PropReader;
 import com.viveka01.format.ContentType;
 import com.viveka01.format.FilePathHandler;
 import com.viveka01.format.Request;
@@ -12,15 +13,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageReceiver {
     static final Logger LOGGER = LoggerFactory.getLogger(ImageReceiver.class);
 
-    static final String root = FilePathHandler.getAbsolutePath("src|main|resources|database|images");
+    static final String root = FilePathHandler.getAbsolutePath(PropReader.getInstance().getProperty("image.image-storage-location"));
     static ConcurrentHashMap<String,String> idToExtension = new ConcurrentHashMap<>();
-    static final int namingSize = 12;
+    static final int namingSize = Integer.parseInt(PropReader.getInstance().getProperty("image.naming-size"));
     static{
         loadImages();
         LOGGER.info("Loaded all images into hashmap");

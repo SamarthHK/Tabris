@@ -1,5 +1,7 @@
 package com.viveka01.format;
 
+import com.viveka01.config.PropReader;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
@@ -17,7 +19,7 @@ public class Response {
     int contentLength;
     ConnectionCodes connection;
     String date;
-    final String SERVER = "Munna-01";
+    final String SERVER = PropReader.getInstance().getProperty("server.name");
     String origin = "*";
     String accessControlAllowMethod = "OPTIONS";
     String accessControlAllowHeaders = "Content-Type";

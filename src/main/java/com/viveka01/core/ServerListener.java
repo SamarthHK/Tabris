@@ -1,5 +1,6 @@
 package com.viveka01.core;
 
+import com.viveka01.config.PropReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ public class ServerListener extends Thread{
     private int port;
     ServerSocket server;
     private int count = 1;
-    private final int POOLSIZE = 1;
+    private final int POOLSIZE = Integer.parseInt(PropReader.getInstance().getProperty("threads.pool-size"));
     ExecutorService pool = Executors.newFixedThreadPool(POOLSIZE);
     volatile Boolean run = true;
 

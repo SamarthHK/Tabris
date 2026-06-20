@@ -1,3 +1,2 @@
-Removed code to spawn new threads every connection
-Now created a pool with thread count
-Switched HttpWorkerThread to HttpWorkerInstructions as it not implements Runnable
+Added support for properties file, now under folder config/properties
+Every constant or thing that needs to be changed is now injected with properties.getinstance().getvalue("Blah BLah Blaqh");

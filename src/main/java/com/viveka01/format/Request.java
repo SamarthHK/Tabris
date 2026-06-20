@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.text.AbstractDocument.Content;
 
+import com.viveka01.config.PropReader;
 import com.viveka01.middleware.Element;
 
 public class Request {
@@ -32,7 +33,7 @@ public class Request {
     int amountRead = 0;
     int lineBreakPos = 0;
     //Constants
-    final int BUFFER_SIZE = 1024; 
+    final int BUFFER_SIZE = Integer.parseInt(PropReader.getInstance().getProperty("request.buffer-size"));
     //Custom formats:
     ArrayList<Element> elements = new ArrayList<>();
     //Check to allow packet to continue down chain

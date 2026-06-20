@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
+import com.viveka01.config.PropReader;
 import com.viveka01.format.ContentType;
 import com.viveka01.format.*;
 
 public class StaticFileHandler {
-    private static final String frontEndDir = FilePathHandler.getAbsolutePath("src|main|resources|static");
-    private static final String fileNotFoundPath = FilePathHandler.getAbsolutePath("src|main|resources|static|fileNotFound.html");
-    private static final String homePage = "premain.html";
-    private static final String favicon = "kaoru.png";
+    private static final String frontEndDir = FilePathHandler.getAbsolutePath(PropReader.getInstance().getProperty("static-file.storage-location"));
+    private static final String fileNotFoundPath = FilePathHandler.getAbsolutePath(PropReader.getInstance().getProperty("static-file.file-not-found-storage-location"));
+    private static final String homePage = PropReader.getInstance().getProperty("static-file.homepage-storage-location");
+    private static final String favicon = PropReader.getInstance().getProperty("static-file.favicon-storage-location");;
     /**
      * @param request request object containing URL to page required
      *                if page isnt found then fileNotFound returned

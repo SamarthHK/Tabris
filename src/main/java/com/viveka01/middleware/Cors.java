@@ -1,8 +1,11 @@
 package com.viveka01.middleware;
 
+import com.viveka01.config.PropReader;
+
 import javax.lang.model.type.NullType;
 
 public class Cors {
+    static final private String ACCEPTED_ORIGIN = "http://"+PropReader.getInstance().getProperty("server.domain")+":"+PropReader.getInstance().getProperty("server.port");
     /**
      *
      * @param origin content of origin header of request
@@ -13,7 +16,7 @@ public class Cors {
         if (origin == null){
             return true;
         }
-        if (origin.equals("http://localhost:8080")){
+        if (origin.equals(ACCEPTED_ORIGIN)){
             return true;
         }
         return false;
