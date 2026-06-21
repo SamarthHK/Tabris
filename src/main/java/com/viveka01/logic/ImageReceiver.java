@@ -2,10 +2,7 @@ package com.viveka01.logic;
 
 import com.viveka01.Main;
 import com.viveka01.config.PropReader;
-import com.viveka01.format.ContentType;
-import com.viveka01.format.FilePathHandler;
-import com.viveka01.format.Request;
-import com.viveka01.format.Response;
+import com.viveka01.format.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +14,17 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ImageReceiver {
+public class ImageReceiver implements Initialize {
     static final Logger LOGGER = LoggerFactory.getLogger(ImageReceiver.class);
 
     static final String root = FilePathHandler.getAbsolutePath(PropReader.getInstance().getProperty("image.image-storage-location"));
     static ConcurrentHashMap<String,String> idToExtension = new ConcurrentHashMap<>();
     static final int namingSize = Integer.parseInt(PropReader.getInstance().getProperty("image.naming-size"));
-    static{
+
+    /**
+     * Loading all the images into hashmap
+     */
+    public static void init(){
         loadImages();
         LOGGER.info("Loaded all images into hashmap");
     }

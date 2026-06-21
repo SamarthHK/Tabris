@@ -1,6 +1,7 @@
 package com.viveka01.router;
 
 import com.viveka01.Main;
+import com.viveka01.format.Initialize;
 import com.viveka01.format.Method;
 import com.viveka01.logic.CorsAccept;
 import com.viveka01.logic.ImageReceiver;
@@ -9,19 +10,18 @@ import com.viveka01.logic.StaticFileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultRouterMap {
+public class DefaultRouterMap implements Initialize {
     static final Logger LOGGER = LoggerFactory.getLogger(DefaultRouterMap.class);
     static String routerName = "com.viveka01.router.RouterMap";
-    static{
-        System.out.println("Initializing Router");
-        try {
-            LOGGER.info("Called static block of {}",Class.forName(routerName));
-            addRoutes();
-            LOGGER.info("Added routes");
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Failed to call static block of {}",routerName,e);
-        }
+
+    /**
+     * Adding all the routes
+     * @throws ClassNotFoundException If somehow you added a route and the class is missing this is thrown
+     */
+    public static void init() throws ClassNotFoundException{
+        addRoutes();
     }
+
     private static void addRoutes(){
         RouterMap.addRoute(Method.GET, "/",StaticFileHandler::getFrontEndPage);
         RouterMap.addRoute(Method.GET, "/{f}",StaticFileHandler::getFrontEndPage);
