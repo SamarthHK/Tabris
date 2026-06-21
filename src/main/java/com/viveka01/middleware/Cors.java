@@ -5,7 +5,7 @@ import com.viveka01.config.PropReader;
 import javax.lang.model.type.NullType;
 
 public class Cors {
-    static final private String ACCEPTED_ORIGIN = "http://"+PropReader.getInstance().getProperty("server.domain")+":"+PropReader.getInstance().getProperty("server.port");
+    static final private String ACCEPTED_ORIGIN = PropReader.getInstance().getProperty("cors.accepted-origin");
     /**
      *
      * @param origin content of origin header of request
@@ -13,10 +13,7 @@ public class Cors {
      * @return returns true if they both match/ satisfy the whitelist, false if they cant use site
      */
     static public boolean corsInspect(String origin, String host){
-        if (origin == null){
-            return true;
-        }
-        if (origin.equals(ACCEPTED_ORIGIN)){
+        if (origin == null || origin.equals(ACCEPTED_ORIGIN)){
             return true;
         }
         return false;

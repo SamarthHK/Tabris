@@ -1,2 +1,2 @@
-Added support for properties file, now under folder config/properties
-Every constant or thing that needs to be changed is now injected with properties.getinstance().getvalue("Blah BLah Blaqh");
+Added ObjectMapper singleton class: format.json.JsonObjectMapper
+Created a JsonHandler, its a object that will hold your one json file, or string. 

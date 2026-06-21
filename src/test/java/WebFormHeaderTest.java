@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;
 import com.viveka01.format.*;
 import com.viveka01.middleware.Element;
@@ -86,15 +85,15 @@ public class WebFormHeaderTest {
             return;
         }
         System.out.println("Created file sucessfully!!!");
-        try {
-            if (FileUtils.contentEquals(new File(control), img)){
-                System.out.println("Both files are same");
-            }
-            else{
-                System.out.println("Files are not equal");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (FileUtils.contentEquals(new File(control), img)){
+//                System.out.println("Both files are same");
+//            }
+//            else{
+//                System.out.println("Files are not equal");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
