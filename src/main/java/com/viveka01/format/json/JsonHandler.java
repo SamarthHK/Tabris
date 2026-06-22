@@ -47,12 +47,18 @@ public class JsonHandler<T> {
         }
         jsonNode =  objectMapper.readTree(jsonString);
     }
-
+    //Getters
     public T getInstance(){return instance;}
 
     public <V> V getValue(String key, Class<V> type) {
         JsonNode node = jsonNode.findValue(key);
         return objectMapper.convertValue(node, type);
+    }
+
+    //Setters
+    public void setClass(Class<T> clazz) throws JsonProcessingException {
+        this.reference = clazz;
+        this.instance = objectMapper.readValue(jsonString,reference);
     }
 
 }

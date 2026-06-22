@@ -7,12 +7,19 @@ import com.viveka01.format.Initialize;
 import java.io.File;
 
 public class JsonObjectMapper implements Initialize {
-    static ObjectMapper objectMapper;
+    static private ObjectMapper objectMapper;
+    static private JsonObjectMapper jsonObjectMapper;
 
     /**
-     * Creating and saving a default instance to objectmapper
+     * Creating and saving a default instance to object-mapper
      */
     public static void init(){
+        if (jsonObjectMapper == null){
+            jsonObjectMapper = new JsonObjectMapper();
+        }
+    }
+
+    private JsonObjectMapper(){
         objectMapper = createDefaultInstance();
     }
 

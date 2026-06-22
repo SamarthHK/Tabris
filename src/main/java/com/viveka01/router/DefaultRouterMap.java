@@ -13,12 +13,16 @@ import org.slf4j.LoggerFactory;
 public class DefaultRouterMap implements Initialize {
     static final Logger LOGGER = LoggerFactory.getLogger(DefaultRouterMap.class);
     static String routerName = "com.viveka01.router.RouterMap";
-
+    static DefaultRouterMap defaultRouterMap;
     /**
      * Adding all the routes
      * @throws ClassNotFoundException If somehow you added a route and the class is missing this is thrown
      */
     public static void init() throws ClassNotFoundException{
+        if (defaultRouterMap == null) defaultRouterMap = new DefaultRouterMap();
+    }
+
+    private DefaultRouterMap(){
         addRoutes();
     }
 

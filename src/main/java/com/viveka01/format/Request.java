@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.text.AbstractDocument.Content;
 
 import com.viveka01.config.PropReader;
+import com.viveka01.format.json.JsonHandler;
 import com.viveka01.middleware.Element;
 
 public class Request {
@@ -36,8 +37,11 @@ public class Request {
     final int BUFFER_SIZE = Integer.parseInt(PropReader.getInstance().getProperty("request.buffer-size"));
     //Custom formats:
     ArrayList<Element> elements = new ArrayList<>();
+    private JsonHandler jsonHandler;
     //Check to allow packet to continue down chain
     private Boolean blocked = false;
+    //Error check incase the packet couldnt be handled properly and reached a error
+    private Boolean error = false;
     /**
      * @param in socket InputStream
      * Takes whole InputStream and parse the http request
@@ -245,13 +249,15 @@ public class Request {
     }
     public Boolean isBlocked(){return blocked; }
     public String getOrigin(){return origin;}
-    
+    public Boolean getError() {return error;}
+    public JsonHandler getJsonHandler() {return jsonHandler;}
+
     //Setters
-    public void setElements(ArrayList<Element> elements){
-        this.elements = elements;
-    }
+    public void setElements(ArrayList<Element> elements){this.elements = elements;}
     public void addElement(Element element){
         elements.add(element);
     }
     public void setBlock(Boolean block){blocked = block;}
+    public void setError(Boolean error){this.error = error;}
+    public void setJsonHandler(JsonHandler jsonHandler) {this.jsonHandler = jsonHandler;}
 }

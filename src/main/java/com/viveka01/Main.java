@@ -6,6 +6,7 @@ import com.viveka01.core.ServerListener;
 import com.viveka01.format.*;
 import com.viveka01.format.json.JsonObjectMapper;
 import com.viveka01.logic.ImageReceiver;
+import com.viveka01.middleware.JsonClassMapper;
 import com.viveka01.router.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class Main {
             JsonObjectMapper.init();
             DefaultRouterMap.init();
             ImageReceiver.init();
+            JsonClassMapper.init();
 
         } catch (ClassNotFoundException e) {
             LOGGER.error("Couldn't get class instances",e);
