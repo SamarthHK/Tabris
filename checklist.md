@@ -9,8 +9,8 @@
 <ol> COMPLETED sidetrack, Create a initializer interface and make every dependency that needs to be initialized extend that</ol>
 <ol> SKIPPED create a lambda in main that takes a arraylist of the initializers and executes them all in order</ol>
 <ol> SKIPPED Create JSON configs and </ol>
-<ol> add JSON support to HTTP server request parsing (Middleware) </ol>
-<ol>Create JSON responses</ol>
+<ol> COMPLETED add JSON support to HTTP server request parsing (Middleware) </ol>
+<ol> COMPLETED Create JSON responses</ol>
 <ol>Session handling etc.</ol>
 <ol>Create a sub-package to identify ID within HTML to inject certain links/ data</ol>
 <ol>Create a HTML page for viewing image with image id: ${image-link}</ol>

@@ -1,6 +1,8 @@
 package com.viveka01.format;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.viveka01.config.PropReader;
+import com.viveka01.format.json.JsonHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +29,36 @@ public class Response {
     String fileName;
     //Body
     byte[] body;
+    //Error check
+    private Boolean error = false;
+    /**
+     * @param statusCode http response code
+     * @param json JsonHandler object of JSON that will be written as body
+     */
+    public Response(int statusCode, JsonHandler json){
+        try {
+            this.body = json.getJsonString().getBytes(StandardCharsets.UTF_8);
+        } catch (JsonProcessingException e) {
+            this.error = true;
+            return;
+        }
+        this.statusCode = statusCode;
+        this.contentType = ContentType.JSON;
+        this.contentLength = body.length;
+        this.connection = ConnectionCodes.CLOSE;
+        this.contentDisposition = "inline";
+
+        switch(statusCode){
+            case 200:
+                reasonPhrase = "OK";
+                break;
+            case 404:
+                reasonPhrase = "Not Found";
+                break;
+            case 500:
+                reasonPhrase = "Internal Server Error";
+        }
+    }
     /**
      * @param statusCode http response code
      * @param contentType Type of content
@@ -94,11 +126,15 @@ public class Response {
         this.contentDisposition = contentDisposition.toString().toLowerCase();
         this.fileName = "\"" + fileName + "\"";
     }
+    public void setError(Boolean error){this.error = error;}
 
     /**
      * @return gives whole byte array response
      */
     public byte[] getResponse(){
+        if (error){
+            return SERVER_ERROR.getResponse();
+        }
         this.date = ZonedDateTime.now(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME);
         String strHeader = "HTTP/" + VERSION + " " + statusCode + " " + reasonPhrase + "\r\n" +
                             "Content-Type: " + contentType.getContentType() + "\r\n" + 
@@ -117,4 +153,5 @@ public class Response {
         System.arraycopy(body,0,response,byteHeader.length,contentLength);
         return response;
     }
+    public Boolean getError(){return error;}
 }

@@ -49,6 +49,7 @@ public class JsonHandler<T> {
     }
     //Getters
     public T getInstance(){return instance;}
+    public String getJsonString() throws JsonProcessingException {return objectMapper.writeValueAsString(instance);}
 
     public <V> V getValue(String key, Class<V> type) {
         JsonNode node = jsonNode.findValue(key);
@@ -60,5 +61,6 @@ public class JsonHandler<T> {
         this.reference = clazz;
         this.instance = objectMapper.readValue(jsonString,reference);
     }
+    public void setInstance(T instance) {this.instance = instance;}
 
 }

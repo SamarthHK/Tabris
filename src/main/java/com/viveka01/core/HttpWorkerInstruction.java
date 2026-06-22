@@ -32,7 +32,7 @@ public class HttpWorkerInstruction implements Runnable{
                 LOGGER.info("Worker {} blocked user accessing from domain: {}",id,request.getOrigin());
                 return;
             }
-            Response response = RouterMap.createResponse(request);
+            Response response = (request.getError()) ? Response.SERVER_ERROR : RouterMap.createResponse(request);
             OutputStream sendResponse = client.getOutputStream();
             sendResponse.write(response.getResponse());
             sendResponse.flush();
