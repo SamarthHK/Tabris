@@ -29,4 +29,5 @@
 <ol>When viewing image show who uploaded it</ol>
 <ol>Image has choice to be uploaded privatly</ol>
 <ol>Add authorization so users can only see their private uploads</ol>
+<ol>migrate to SpingBoot</ol>
 </li>
