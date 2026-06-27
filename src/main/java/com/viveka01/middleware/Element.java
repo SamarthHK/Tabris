@@ -1,12 +1,9 @@
 package com.viveka01.middleware;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.viveka01.format.ContentType;
+import com.viveka01.format.http.ContentType;
 
 public class Element {
     String contentDisposition;

@@ -1,7 +1,7 @@
 package com.viveka01.core;
 
-import com.viveka01.format.Request;
-import com.viveka01.format.Response;
+import com.viveka01.format.http.Request;
+import com.viveka01.format.http.Response;
 import com.viveka01.middleware.HandleMiddleware;
 import com.viveka01.router.RouterMap;
 import org.slf4j.Logger;

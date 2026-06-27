@@ -1,7 +1,5 @@
-import org.junit.Test;
-
 import com.viveka01.router.*;
-import com.viveka01.format.Method;
+import com.viveka01.format.http.Method;
 import com.viveka01.logic.StaticFileHandler;
 public class RouteHandlerTest {
     

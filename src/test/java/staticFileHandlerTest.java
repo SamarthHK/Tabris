@@ -1,13 +1,9 @@
-import org.junit.Before;
-import org.junit.Test;
+import com.viveka01.format.http.Request;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
-
-import com.viveka01.format.*;
 public class staticFileHandlerTest {
     public void test(){
         String header = "GET /kaworu.gif HTTP/1.1\r\n" + //

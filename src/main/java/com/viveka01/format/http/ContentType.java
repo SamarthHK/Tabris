@@ -1,4 +1,4 @@
-package com.viveka01.format;
+package com.viveka01.format.http;
 /**
  *Holding all the content types
  */

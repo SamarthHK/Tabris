@@ -1,7 +1,8 @@
 package com.viveka01.format;
 
+/**
+ * Nothing special, just means the class will run at start up
+ */
 public interface Initialize {
-    public static void init() throws Exception{
 
-    }
 }

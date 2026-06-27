@@ -7,8 +7,10 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
 import com.viveka01.config.PropReader;
-import com.viveka01.format.ContentType;
+import com.viveka01.format.http.ContentType;
 import com.viveka01.format.*;
+import com.viveka01.format.http.Request;
+import com.viveka01.format.http.Response;
 
 public class StaticFileHandler {
     private static final String frontEndDir = FilePathHandler.getAbsolutePath(PropReader.getInstance().getProperty("static-file.storage-location"));

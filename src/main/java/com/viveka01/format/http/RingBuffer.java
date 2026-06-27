@@ -1,4 +1,4 @@
-package com.viveka01.format;
+package com.viveka01.format.http;
 
 /**
  * RingBuffer: Keeps track of data added and old data in order, but stays

@@ -4,6 +4,7 @@ import java.io.*;
 
 import com.viveka01.core.ServerListener;
 import com.viveka01.format.*;
+import com.viveka01.format.fileInjector.InjectionLocator;
 import com.viveka01.format.json.JsonObjectMapper;
 import com.viveka01.logic.ImageReceiver;
 import com.viveka01.middleware.JsonClassMapper;
@@ -23,13 +24,9 @@ public class Main {
             DefaultRouterMap.init();
             ImageReceiver.init();
             JsonClassMapper.init();
-
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Couldn't get class instances",e);
-            return;
-        } catch (IOException e){
-            LOGGER.error("Something went wrong with prop reader initializing");
-            return;
+            InjectionLocator.init();
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.error("Something went wrong initializing",e);
         }
 
         port = Integer.parseInt(PropReader.getInstance().getProperty("server.port"));

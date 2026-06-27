@@ -1,10 +1,9 @@
-package com.viveka01.format;
+package com.viveka01.format.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.viveka01.config.PropReader;
 import com.viveka01.format.json.JsonHandler;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

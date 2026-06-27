@@ -1,14 +1,11 @@
 package com.viveka01.middleware;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.viveka01.format.ContentType;
-import com.viveka01.format.Request;
-import com.viveka01.format.Response;
+import com.viveka01.format.http.ContentType;
+import com.viveka01.format.http.Request;
 import com.viveka01.format.json.JsonHandler;
-import com.viveka01.logic.ServerError;
 
 public class HandleMiddleware{
     public static Request MiddleWareRoute(Request request){

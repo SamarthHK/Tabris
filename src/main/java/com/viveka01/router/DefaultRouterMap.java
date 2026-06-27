@@ -1,10 +1,8 @@
 package com.viveka01.router;
 
-import com.viveka01.Main;
 import com.viveka01.format.Initialize;
-import com.viveka01.format.Method;
+import com.viveka01.format.http.Method;
 import com.viveka01.logic.CorsAccept;
-import com.viveka01.logic.ImageReceiver;
 import com.viveka01.logic.ImageReceiver;
 import com.viveka01.logic.StaticFileHandler;
 import org.slf4j.Logger;

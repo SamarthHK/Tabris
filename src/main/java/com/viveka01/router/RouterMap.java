@@ -1,6 +1,8 @@
 package com.viveka01.router;
 
-import com.viveka01.format.*;
+import com.viveka01.format.http.Method;
+import com.viveka01.format.http.Request;
+import com.viveka01.format.http.Response;
 import com.viveka01.logic.ServerError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

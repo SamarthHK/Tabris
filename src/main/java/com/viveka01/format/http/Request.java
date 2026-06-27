@@ -1,4 +1,4 @@
-package com.viveka01.format;
+package com.viveka01.format.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
-import javax.swing.text.AbstractDocument.Content;
 
 import com.viveka01.config.PropReader;
 import com.viveka01.format.json.JsonHandler;

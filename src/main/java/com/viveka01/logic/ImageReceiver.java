@@ -1,16 +1,16 @@
 package com.viveka01.logic;
 
-import com.viveka01.Main;
 import com.viveka01.config.PropReader;
 import com.viveka01.format.*;
+import com.viveka01.format.http.ContentType;
+import com.viveka01.format.http.Request;
+import com.viveka01.format.http.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 

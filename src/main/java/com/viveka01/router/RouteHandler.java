@@ -1,7 +1,7 @@
 package com.viveka01.router;
 
-import com.viveka01.format.Request;
-import com.viveka01.format.Response;
+import com.viveka01.format.http.Request;
+import com.viveka01.format.http.Response;
 
 @FunctionalInterface
 public interface RouteHandler{

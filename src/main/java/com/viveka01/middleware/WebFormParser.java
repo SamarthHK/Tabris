@@ -1,11 +1,10 @@
 package com.viveka01.middleware;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.viveka01.format.RingBuffer;
+import com.viveka01.format.http.RingBuffer;
 
 public class WebFormParser {
     String boundary;

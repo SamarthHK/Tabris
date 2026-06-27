@@ -1,6 +1,6 @@
 package com.viveka01.router;
 
-import com.viveka01.format.ContentType;
+import com.viveka01.format.http.ContentType;
 
 public enum Id {
     //DO NOT REPEAT CODE EVER, CODE MUST BE UNIQUE
