@@ -19,12 +19,7 @@ public class Main {
     public static void main(String args[]) {
         ServerListener serverListener;
         try {
-            PropReader.init();
-            JsonObjectMapper.init();
-            DefaultRouterMap.init();
-            ImageReceiver.init();
-            JsonClassMapper.init();
-            InjectionLocator.init();
+            init();
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.error("Something went wrong initializing",e);
         }
@@ -38,6 +33,13 @@ public class Main {
             return;
         }
         serverListener.start();
-
+    }
+    public static void init() throws IOException,ClassNotFoundException{
+        PropReader.init();
+        JsonObjectMapper.init();
+        DefaultRouterMap.init();
+        ImageReceiver.init();
+        JsonClassMapper.init();
+        InjectionLocator.init();
     }
 }

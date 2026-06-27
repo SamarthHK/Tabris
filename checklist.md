@@ -11,7 +11,7 @@
 <ol> SKIPPED Create JSON configs and </ol>
 <ol> COMPLETED add JSON support to HTTP server request parsing (Middleware) </ol>
 <ol> COMPLETED Create JSON responses</ol>
-<ol> IN PROGRESS Create a sub-package to identify ID within HTML to inject certain links/ data</ol>
+<ol> COMPLETED Create a sub-package to identify ID within HTML to inject certain links/ data</ol>
 <ol> COMPLETED Create a HTML page for viewing image with image id: ${image-link}</ol>
 <ol>Create logic/ wiring to serve HTML page with image link injected into HTML</ol>
 <ol>Get TLS cert</ol>

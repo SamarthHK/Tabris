@@ -17,8 +17,8 @@ public class InjectionLocator implements Initialize {
     private static InjectionLocator injectionLocator;
     private static JsonHandler jsonHandler;
     private InjectionFiles injectionFiles;
-    ArrayList<String> files = new ArrayList<>();
-    HashMap<String,ArrayList<InjectionLocation>> fileLocations = new HashMap<>();
+    static ArrayList<String> files = new ArrayList<>();
+    static HashMap<String,ArrayList<InjectionLocation>> fileLocations = new HashMap<>();
 
     /**
      *
@@ -89,6 +89,15 @@ public class InjectionLocator implements Initialize {
             index = end;
         }
         return output;
+    }
+
+    /**
+     *
+     * @param file Takes location of file, except the root, so if it lives in /front-end/test.html input only test.html
+     * @return returns the injections related to the file
+     */
+    public static ArrayList<InjectionLocation> getFileInjectionLocation(String file){
+        return fileLocations.get(file);
     }
 
 }
